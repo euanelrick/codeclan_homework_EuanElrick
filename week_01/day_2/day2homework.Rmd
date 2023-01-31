@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(CodeClanData)
+```
+```{r}
+library(tidyverse)
+```
+```{r}
+library(dplyr)
+```
+```{r}
+drinks_content
+```
+
+Q1. 18 columns, 242 rows. Consists of character strings, and numerical values. First three columns are information about the size of type of drink and the size. The other 15 columns contain nutritional information about each drink.
+
+
+Q2. 
+
+```{r}
+drinks_content_1_4 <- select(drinks_content, Beverage_category:Calories)
+
+drinks_content_1_4
+```
+```{r}
+drinks_content_1_4 %>% 
+  mutate(Calories =sum(Calories))
+```
+Above function does not return NA therefore no NA values in calories column
+
+
+Q3. 
+```{r}
+drinks_content_1_4 %>% 
+  mutate(calorie_diff = Calories - 135)
+         
+```
+
+Q4.
+
+```{r}
+drinks_content_1_4 %>% 
+  group_by(Beverage_category) %>% 
+    summarise(average_calories = mean(Calories)) %>% 
+      arrange(desc(average_calories))
+```
+
+Smoothies, Frappuccino® Blended Coffee, and Signature Espresso Drinks have the most calories on average. Coffee, Shaken Iced Beverages, and Classic Espresso drinks have the least calories on average.
+
+
+Q5.
+```{r}
+drink_content_prep <- drinks_content_1_4 %>% 
+  group_by(Beverage_prep) %>% 
+    summarise(average_calories_prep = mean(Calories)) %>% 
+      arrange(desc(average_calories_prep)) 
+
+```
+
+
+Q6. 
+```{r}
+average_calories_all  <- drinks_content_1_4 %>% 
+  summarise(average_calories_all = mean(Calories)) %>% 
+print(average_calories_all)
+```
+
+
+```{r}
+filter(drink_content_prep, average_calories_prep > 193.8719)
+```
+
+
+Q7.
+```{r}
+drinks_content_1_4 %>% 
+  group_by(Beverage_category, Beverage, Beverage_prep) %>% 
+  arrange(Calories) %>% 
+  head(11)
+ 
+
+  
+```
+The best coffee to go for is a short brewed coffee
