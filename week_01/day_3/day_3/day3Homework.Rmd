@@ -1,0 +1,120 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(dplyr)
+library(skimr)
+```
+
+```{r}
+movies 
+sum(is.na(movies
+          ))
+```
+
+###4803 observations, 13 columns.3942 NA in original dataset. I feel removing title, homepage, overview, and tagline would be the first step to clean up the data as they aren't particularly useful in an analytical context
+
+
+#Q2
+```{r}
+movies_selected <- movies %>% 
+  select(original_title, runtime, budget)
+
+movies_selected
+```
+
+
+#Q3
+```{r}
+movies_selected %>% 
+filter(is.na(original_title)) 
+```
+
+```{r}
+movies_selected %>% 
+  
+  filter(is.na(budget)) 
+```
+
+```{r}
+movies_selected %>% 
+  filter(is.na(runtime))
+```
+
+###Two NAs in runtime column. No missing values in original_title or budget
+
+#Q4
+
+```{r}
+movies_runtime <- movies_selected %>% 
+mutate(runtime = na_if(runtime, 0))
+movies_runtime
+```
+
+
+```{r}
+movies_runtime <- movies_runtime %>% 
+  select(-runtime_na)
+```
+
+#Q5
+
+```{r}
+movies_imputed <- movies_runtime %>% 
+
+mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
+  
+```
+
+```{r}
+movies_imputed %>% 
+  sum(is.na(movies_imputed))
+```
+
+
+#Q6
+
+```{r}
+movies_imputed %>% 
+  slice_max(runtime, n=10, with_ties = FALSE)
+```
+
+
+```{r}
+movies_imputed %>% 
+  slice_min(runtime, n=10, with_ties = FALSE)
+```
+
+
+#Q7
+
+```{r}
+movies_imputed <-  movies_imputed %>% 
+  mutate(budget = if_else(budget < 100, median(budget), budget))
+```
+
+#E1
+
+```{r}
+movies_imputed %>% 
+  mutate(budget_type = case_when(
+    budget < 12e6 ~ "Small budget",
+    budget < 40e6 ~ "Medium budget",
+    TRUE ~ "Big budget"
+  ))
+```
+
+
+
+#E2
+##?????
+```{r}
+movies %>% 
+  summarise(across(where(is.character), NA))
+```
+
+
+
+
