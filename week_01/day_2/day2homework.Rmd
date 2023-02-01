@@ -65,12 +65,15 @@ Q6.
 ```{r}
 average_calories_all  <- drinks_content_1_4 %>% 
   summarise(average_calories_all = mean(Calories)) %>% 
-print(average_calories_all)
+pull(average_calories_all)
+
+
 ```
 
 
 ```{r}
-filter(drink_content_prep, average_calories_prep > 193.8719)
+filter(drink_content_prep, average_calories_prep > average_calories_all)
+
 ```
 
 
@@ -79,7 +82,8 @@ Q7.
 drinks_content_1_4 %>% 
   group_by(Beverage_category, Beverage, Beverage_prep) %>% 
   arrange(Calories) %>% 
-  head(11)
+  filter(Beverage_category != "Tazo® Tea Drinks") %>% 
+  head(1)
  
 
   
