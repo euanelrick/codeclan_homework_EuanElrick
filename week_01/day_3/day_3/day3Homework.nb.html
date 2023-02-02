@@ -1763,6 +1763,14 @@ library(skimr)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShDb2RlQ2xhbkRhdGEpXG5cbmBgYCJ9 -->
+<pre class="r"><code>library(CodeClanData)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzIFxuc3VtKGlzLm5hKG1vdmllc1xuICAgICAgICAgICkpXG5gYGAifQ== -->
 <pre class="r"><code>movies 
 sum(is.na(movies
@@ -1770,7 +1778,7 @@ sum(is.na(movies
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>###4803 observations, 13 columns.3942 NA in original dataset. I feel
+<p>###4803 observations, 13 columns. 3942 NA in original dataset. I feel
 removing title, homepage, overview, and tagline would be the first step
 to clean up the data as they aren’t particularly useful in an analytical
 context</p>
@@ -1809,13 +1817,6 @@ filter(is.na(original_title)) </code></pre>
 <pre class="r"><code>movies_selected %&gt;% 
   filter(is.na(runtime))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MiwibmNvbCI6NCwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyIyIMOXIDQiXX19LCJyZGYiOiJINHNJQUFBQUFBQUFBM1ZSUFd2RE1CQlZITHNoaG9SQXh5NmFTMjFTdW1Uc0Y0RnVwVTBoVzdqWWFpSWlTMEdXU2JmMmgzVHFMK3d2aUh0eXBINFlLcEIwOSs1TzkrN3A0WForRWM5alFraVhoRUZBdWhHYUpIcWFUWk1KUVFTZERnbEozOTR2bUhTTVJvaDdoRHR3Z2RPYk5ZY0NEQ3M0bldxUUdTc3pSUk42SitnOWJJSG1UQWlnS3lZTmN4VW5NMFd2V1pPOE9hT1BYSUxSUU1IUTgvRVl3MFA3K091blpkTDc4TGZIcjhUN3hDS1g1SHY5ay8rSGZTU2hZS1ZqSGpwd3FEUmZZWGV4TU53SXo2Nm5LMmw0NGQyalpaV3ZtSEZlN0lJTENhME9mYTEycWU4eXNKVGU4S2pyZXQrbWtna29QUlVQeGprWVNKODExcVBYTHVtcHJlRktZbEZnZnlCcUZYZDBDeGhWMGpMSmsyeGR5VTB5c1lyRlRmeXdCczRPZnRuaG9XZFF1N2NpUHorVHFKRlhJeEt3Wk1Mcmh5TTNFNmRiemVXUFJHcFhwa1laOEhseHBvUkhtdUhJL2d1RU05TmZlUUlBQUE9PSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["original_title"],"name":[1],"type":["chr"],"align":["left"]},{"label":["runtime"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["budget"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["runtime_na"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Chiamatemi Francesco - Il Papa della gente","2":"NA","3":"1.5e+07","4":"NA"},{"1":"To Be Frank, Sinatra at 100","2":"NA","3":"2.0e+00","4":"NA"}],"options":{"columns":{"min":{},"max":[10],"total":[4]},"rows":{"min":[10],"max":[10],"total":[2]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>###Two NAs in runtime column. No missing values in original_title or
@@ -1823,18 +1824,10 @@ budget</p>
 <p>#Q4</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX3J1bnRpbWUgPC0gbW92aWVzX3NlbGVjdGVkICU+JSBcbm11dGF0ZShydW50aW1lID0gbmFfaWYocnVudGltZSwgMCkpXG5tb3ZpZXNfcnVudGltZVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX3J1bnRpbWUgPC0gbW92aWVzX3NlbGVjdGVkICU+JSBcbm11dGF0ZShydW50aW1lID0gbmFfaWYocnVudGltZSwgMCkpIFxubW92aWVzX3J1bnRpbWVcbmBgYCJ9 -->
 <pre class="r"><code>movies_runtime &lt;- movies_selected %&gt;% 
-mutate(runtime = na_if(runtime, 0))
+mutate(runtime = na_if(runtime, 0)) 
 movies_runtime</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX3J1bnRpbWUgPC0gbW92aWVzX3J1bnRpbWUgJT4lIFxuICBzZWxlY3QoLXJ1bnRpbWVfbmEpXG5gYGAifQ== -->
-<pre class="r"><code>movies_runtime &lt;- movies_runtime %&gt;% 
-  select(-runtime_na)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1851,9 +1844,9 @@ mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX2ltcHV0ZWQgJT4lIFxuICBzdW0oaXMubmEobW92aWVzX2ltcHV0ZWQpKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX2ltcHV0ZWQgJT4lIFxuICBzdW1tYXJpc2UoaXMubmEobW92aWVzX2ltcHV0ZWQpKVxuYGBgIn0= -->
 <pre class="r"><code>movies_imputed %&gt;% 
-  sum(is.na(movies_imputed))</code></pre>
+  summarise(is.na(movies_imputed))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1868,26 +1861,57 @@ mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX2ltcHV0ZWQgJT4lIFxuICBzbGljZV9taW4ocnVudGltZSwgbj0xMCwgd2l0aF90aWVzID0gRkFMU0UpXG5gYGAifQ== -->
-<pre class="r"><code>movies_imputed %&gt;% 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubW92aWVzX2ltcHV0ZWQgJT4lIFxuICBzbGljZV9taW4ocnVudGltZSwgbj0xMCwgd2l0aF90aWVzID0gRkFMU0UpXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+movies_imputed %&gt;% 
   slice_min(runtime, n=10, with_ties = FALSE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>#Q7</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX2ltcHV0ZWQgPC0gIG1vdmllc19pbXB1dGVkICU+JSBcbiAgbXV0YXRlKGJ1ZGdldCA9IGlmX2Vsc2UoYnVkZ2V0IDwgMTAwLCBtZWRpYW4oYnVkZ2V0KSwgYnVkZ2V0KSlcbmBgYCJ9 -->
-<pre class="r"><code>movies_imputed &lt;-  movies_imputed %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+#Q7
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubW92aWVzX2ltcHV0ZWQgPC0gIG1vdmllc19pbXB1dGVkICU+JSBcbiAgbXV0YXRlKGJ1ZGdldCA9IGlmX2Vsc2UoYnVkZ2V0IDwgMTAwLCBtZWRpYW4oYnVkZ2V0KSwgYnVkZ2V0KSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+movies_imputed &lt;-  movies_imputed %&gt;% 
   mutate(budget = if_else(budget &lt; 100, median(budget), budget))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>#E1</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX2ltcHV0ZWQgJT4lIFxuICBtdXRhdGUoYnVkZ2V0X3R5cGUgPSBjYXNlX3doZW4oXG4gICAgYnVkZ2V0IDwgMTJlNiB+IFwiU21hbGwgYnVkZ2V0XCIsXG4gICAgYnVkZ2V0IDwgNDBlNiB+IFwiTWVkaXVtIGJ1ZGdldFwiLFxuICAgIFRSVUUgfiBcIkJpZyBidWRnZXRcIlxuICApKVxuYGBgIn0= -->
-<pre class="r"><code>movies_imputed %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#E1
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzX2ltcHV0ZWQgJT4lIFxuICBtdXRhdGUoYnVkZ2V0X3R5cGUgPSBjYXNlX3doZW4oXG4gICAgYnVkZ2V0IDwgMTJlNiB+IFwiU21hbGwgYnVkZ2V0XCIsXG4gICAgYnVkZ2V0IDwgNDBlNiB+IFwiTWVkaXVtIGJ1ZGdldFwiLFxuICAgIFRSVUUgfiBcIkJpZyBidWRnZXRcIlxuICApKVxuYGBgIn0= --&gt;
+
+```r
+movies_imputed %&gt;% 
   mutate(budget_type = case_when(
     budget &lt; 12e6 ~ &quot;Small budget&quot;,
     budget &lt; 40e6 ~ &quot;Medium budget&quot;,
@@ -1899,27 +1923,22 @@ mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
 <p>#E2 ##?????</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzICU+JSBcbiAgc3VtbWFyaXNlKGFjcm9zcyh3aGVyZShpcy5jaGFyYWN0ZXIpLCBOQSkpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzICU+JSBcbiAgc3VtbWFyaXNlKGFjcm9zcyh3aGVyZShpcy5jaGFyYWN0ZXIpLCB+c3VtKGlzLm5hKC54KSkpKVxuYGBgIn0= -->
 <pre class="r"><code>movies %&gt;% 
-  summarise(across(where(is.character), NA))</code></pre>
+  summarise(across(where(is.character), ~sum(is.na(.x))))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYHN1bW1hcmlzZSgpYDpcbiEgUHJvYmxlbSB3aGlsZSBjb21wdXRpbmcgYC4uMSA9IGFjcm9zcyh3aGVyZShpcy5jaGFyYWN0ZXIpLCBOQSlgLlxuQ2F1c2VkIGJ5IGVycm9yIGluIGBhY3Jvc3MoKWA6XG4hIGAuZm5zYCBtdXN0IGJlIE5VTEwsIGEgZnVuY3Rpb24sIGEgZm9ybXVsYSwgb3IgYSBsaXN0IG9mIGZ1bmN0aW9ucy9mb3JtdWxhcy5cbkJhY2t0cmFjZTpcbiAxLiBtb3ZpZXMgJT4lIHN1bW1hcmlzZShhY3Jvc3Mod2hlcmUoaXMuY2hhcmFjdGVyKSwgTkEpKVxuIDMuIGRwbHlyOjo6c3VtbWFyaXNlLmRhdGEuZnJhbWUoLiwgYWNyb3NzKHdoZXJlKGlzLmNoYXJhY3RlciksIE5BKSlcbiA0LiBkcGx5cjo6OnN1bW1hcmlzZV9jb2xzKC5kYXRhLCBkcGx5cl9xdW9zdXJlcyguLi4pLCBjYWxsZXJfZW52ID0gY2FsbGVyX2VudigpKVxuIDYuIGRwbHlyOjo6ZXhwYW5kX2Fjcm9zcyhkb3RzW1tpXV0pXG4gNy4gZHBseXI6OjphY3Jvc3Nfc2V0dXAoLi4uKVxuIn0= -->
-<pre><code>Error in `summarise()`:
-! Problem while computing `..1 = across(where(is.character), NA)`.
-Caused by error in `across()`:
-! `.fns` must be NULL, a function, a formula, or a list of functions/formulas.
-Backtrace:
- 1. movies %&gt;% summarise(across(where(is.character), NA))
- 3. dplyr:::summarise.data.frame(., across(where(is.character), NA))
- 4. dplyr:::summarise_cols(.data, dplyr_quosures(...), caller_env = caller_env())
- 6. dplyr:::expand_across(dots[[i]])
- 7. dplyr:::across_setup(...)</code></pre>
-<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6Nywic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyIxIMOXIDciXX19LCJyZGYiOiJINHNJQUFBQUFBQUFBM1ZSeTA3RE1CQjBYcVNOQ2lycWR5UVNnZ01mZ0RoeFFpRDFWaTNwNGxxNGR1UTRMVWUrdkdXZHhqU3lpaVU3cytOWjc4N205V2w1WHl3THhsakMwamhtU1VhUVplOXZ6K1VqSTRhQ2lLVnM2cjdmSkZvUXlHbGY5eGVuZFFIUEZ2OW8waEdPempoNUNZcGxDcmJZRXBqM0JVL2tqVGFDQ3dWeVpZV1Y2S1hqWUxMUlcyeUErL2oyTDBXQzR0MzVZcUozYUhZQzkwTThNeWdSV2x5dHdYcE5ib0ZMb1REb2JXcjB2dkw5T1FQeER4MUhXcUdKV2tMclRYaXlvQUpRZlJyS3ArZ1FwT1M2c1VJclNvcmRDTE1nT1RJQk1lK1U2MlJkMXB0T2ZaVVBkNjdDaGJtUFp1MytuNnNaSDRlM3N1R3RLMVRjdVIyYWwvQ0IwaytlTFBlT3E4WUlaYjBWWXR2S2FndGVWOVJhZXFZM3h3Ni8vc1VCNm1JQ0FBQT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["original_title"],"name":[1],"type":["int"],"align":["right"]},{"label":["title"],"name":[2],"type":["int"],"align":["right"]},{"label":["homepage"],"name":[3],"type":["int"],"align":["right"]},{"label":["original_language"],"name":[4],"type":["int"],"align":["right"]},{"label":["overview"],"name":[5],"type":["int"],"align":["right"]},{"label":["release_date"],"name":[6],"type":["int"],"align":["right"]},{"label":["tagline"],"name":[7],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"3091","4":"0","5":"4","6":"1","7":"844"}],"options":{"columns":{"min":{},"max":[10],"total":[7]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkoc2tpbXIpCmBgYAoKYGBge3J9Cm1vdmllcyAKc3VtKGlzLm5hKG1vdmllcwogICAgICAgICAgKSkKYGBgCgojIyM0ODAzIG9ic2VydmF0aW9ucywgMTMgY29sdW1ucy4zOTQyIE5BIGluIG9yaWdpbmFsIGRhdGFzZXQuIEkgZmVlbCByZW1vdmluZyB0aXRsZSwgaG9tZXBhZ2UsIG92ZXJ2aWV3LCBhbmQgdGFnbGluZSB3b3VsZCBiZSB0aGUgZmlyc3Qgc3RlcCB0byBjbGVhbiB1cCB0aGUgZGF0YSBhcyB0aGV5IGFyZW4ndCBwYXJ0aWN1bGFybHkgdXNlZnVsIGluIGFuIGFuYWx5dGljYWwgY29udGV4dAoKCiNRMgpgYGB7cn0KbW92aWVzX3NlbGVjdGVkIDwtIG1vdmllcyAlPiUgCiAgc2VsZWN0KG9yaWdpbmFsX3RpdGxlLCBydW50aW1lLCBidWRnZXQpCgptb3ZpZXNfc2VsZWN0ZWQKYGBgCgoKI1EzCmBgYHtyfQptb3ZpZXNfc2VsZWN0ZWQgJT4lIApmaWx0ZXIoaXMubmEob3JpZ2luYWxfdGl0bGUpKSAKYGBgCgpgYGB7cn0KbW92aWVzX3NlbGVjdGVkICU+JSAKICAKICBmaWx0ZXIoaXMubmEoYnVkZ2V0KSkgCmBgYAoKYGBge3J9Cm1vdmllc19zZWxlY3RlZCAlPiUgCiAgZmlsdGVyKGlzLm5hKHJ1bnRpbWUpKQpgYGAKCiMjI1R3byBOQXMgaW4gcnVudGltZSBjb2x1bW4uIE5vIG1pc3NpbmcgdmFsdWVzIGluIG9yaWdpbmFsX3RpdGxlIG9yIGJ1ZGdldAoKI1E0CgpgYGB7cn0KbW92aWVzX3J1bnRpbWUgPC0gbW92aWVzX3NlbGVjdGVkICU+JSAKbXV0YXRlKHJ1bnRpbWUgPSBuYV9pZihydW50aW1lLCAwKSkKbW92aWVzX3J1bnRpbWUKYGBgCgoKYGBge3J9Cm1vdmllc19ydW50aW1lIDwtIG1vdmllc19ydW50aW1lICU+JSAKICBzZWxlY3QoLXJ1bnRpbWVfbmEpCmBgYAoKI1E1CgpgYGB7cn0KbW92aWVzX2ltcHV0ZWQgPC0gbW92aWVzX3J1bnRpbWUgJT4lIAoKbXV0YXRlKHJ1bnRpbWUgPSBjb2FsZXNjZShydW50aW1lLCBtZWRpYW4ocnVudGltZSwgbmEucm0gPSBUUlVFKSkpCiAgCmBgYAoKYGBge3J9Cm1vdmllc19pbXB1dGVkICU+JSAKICBzdW0oaXMubmEobW92aWVzX2ltcHV0ZWQpKQpgYGAKCgojUTYKCmBgYHtyfQptb3ZpZXNfaW1wdXRlZCAlPiUgCiAgc2xpY2VfbWF4KHJ1bnRpbWUsIG49MTAsIHdpdGhfdGllcyA9IEZBTFNFKQpgYGAKCgpgYGB7cn0KbW92aWVzX2ltcHV0ZWQgJT4lIAogIHNsaWNlX21pbihydW50aW1lLCBuPTEwLCB3aXRoX3RpZXMgPSBGQUxTRSkKYGBgCgoKI1E3CgpgYGB7cn0KbW92aWVzX2ltcHV0ZWQgPC0gIG1vdmllc19pbXB1dGVkICU+JSAKICBtdXRhdGUoYnVkZ2V0ID0gaWZfZWxzZShidWRnZXQgPCAxMDAsIG1lZGlhbihidWRnZXQpLCBidWRnZXQpKQpgYGAKCiNFMQoKYGBge3J9Cm1vdmllc19pbXB1dGVkICU+JSAKICBtdXRhdGUoYnVkZ2V0X3R5cGUgPSBjYXNlX3doZW4oCiAgICBidWRnZXQgPCAxMmU2IH4gIlNtYWxsIGJ1ZGdldCIsCiAgICBidWRnZXQgPCA0MGU2IH4gIk1lZGl1bSBidWRnZXQiLAogICAgVFJVRSB+ICJCaWcgYnVkZ2V0IgogICkpCmBgYAoKCgojRTIKIyM/Pz8/PwpgYGB7cn0KbW92aWVzICU+JSAKICBzdW1tYXJpc2UoYWNyb3NzKHdoZXJlKGlzLmNoYXJhY3RlciksIE5BKSkKYGBgCgoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkoc2tpbXIpCmBgYAoKYGBge3J9CmxpYnJhcnkoQ29kZUNsYW5EYXRhKQoKYGBgCgpgYGB7cn0KbW92aWVzIApzdW0oaXMubmEobW92aWVzCiAgICAgICAgICApKQpgYGAKCiMjIzQ4MDMgb2JzZXJ2YXRpb25zLCAxMyBjb2x1bW5zLiAzOTQyIE5BIGluIG9yaWdpbmFsIGRhdGFzZXQuIEkgZmVlbCByZW1vdmluZyB0aXRsZSwgaG9tZXBhZ2UsIG92ZXJ2aWV3LCBhbmQgdGFnbGluZSB3b3VsZCBiZSB0aGUgZmlyc3Qgc3RlcCB0byBjbGVhbiB1cCB0aGUgZGF0YSBhcyB0aGV5IGFyZW4ndCBwYXJ0aWN1bGFybHkgdXNlZnVsIGluIGFuIGFuYWx5dGljYWwgY29udGV4dAoKCiNRMgpgYGB7cn0KbW92aWVzX3NlbGVjdGVkIDwtIG1vdmllcyAlPiUgCiAgc2VsZWN0KG9yaWdpbmFsX3RpdGxlLCBydW50aW1lLCBidWRnZXQpCgptb3ZpZXNfc2VsZWN0ZWQKYGBgCgoKI1EzCmBgYHtyfQptb3ZpZXNfc2VsZWN0ZWQgJT4lIApmaWx0ZXIoaXMubmEob3JpZ2luYWxfdGl0bGUpKSAKYGBgCgpgYGB7cn0KbW92aWVzX3NlbGVjdGVkICU+JSAKICAKICBmaWx0ZXIoaXMubmEoYnVkZ2V0KSkgCmBgYAoKYGBge3J9Cm1vdmllc19zZWxlY3RlZCAlPiUgCiAgZmlsdGVyKGlzLm5hKHJ1bnRpbWUpKQpgYGAKCgojIyNUd28gTkFzIGluIHJ1bnRpbWUgY29sdW1uLiBObyBtaXNzaW5nIHZhbHVlcyBpbiBvcmlnaW5hbF90aXRsZSBvciBidWRnZXQKCiNRNAoKYGBge3J9Cm1vdmllc19ydW50aW1lIDwtIG1vdmllc19zZWxlY3RlZCAlPiUgCm11dGF0ZShydW50aW1lID0gbmFfaWYocnVudGltZSwgMCkpIAptb3ZpZXNfcnVudGltZQpgYGAKCiNRNQoKYGBge3J9Cm1vdmllc19pbXB1dGVkIDwtIG1vdmllc19ydW50aW1lICU+JSAKCm11dGF0ZShydW50aW1lID0gY29hbGVzY2UocnVudGltZSwgbWVkaWFuKHJ1bnRpbWUsIG5hLnJtID0gVFJVRSkpKQogIApgYGAKCmBgYHtyfQptb3ZpZXNfaW1wdXRlZCAlPiUgCiAgc3VtbWFyaXNlKGlzLm5hKG1vdmllc19pbXB1dGVkKSkKYGBgCgoKI1E2CgpgYGB7cn0KbW92aWVzX2ltcHV0ZWQgJT4lIAogIHNsaWNlX21heChydW50aW1lLCBuPTEwLCB3aXRoX3RpZXMgPSBGQUxTRSkKYGBgCgoKYGBge3J9Cm1vdmllc19pbXB1dGVkICU+JSAKICBzbGljZV9taW4ocnVudGltZSwgbj0xMCwgd2l0aF90aWVzID0gRkFMU0UpCmBgYAoKCiNRNwoKYGBge3J9Cm1vdmllc19pbXB1dGVkIDwtICBtb3ZpZXNfaW1wdXRlZCAlPiUgCiAgbXV0YXRlKGJ1ZGdldCA9IGlmX2Vsc2UoYnVkZ2V0IDwgMTAwLCBtZWRpYW4oYnVkZ2V0KSwgYnVkZ2V0KSkKYGBgCgojRTEKCmBgYHtyfQptb3ZpZXNfaW1wdXRlZCAlPiUgCiAgbXV0YXRlKGJ1ZGdldF90eXBlID0gY2FzZV93aGVuKAogICAgYnVkZ2V0IDwgMTJlNiB+ICJTbWFsbCBidWRnZXQiLAogICAgYnVkZ2V0IDwgNDBlNiB+ICJNZWRpdW0gYnVkZ2V0IiwKICAgIFRSVUUgfiAiQmlnIGJ1ZGdldCIKICApKQpgYGAKCgoKI0UyCiMjPz8/Pz8KYGBge3J9Cm1vdmllcyAlPiUgCiAgc3VtbWFyaXNlKGFjcm9zcyh3aGVyZShpcy5jaGFyYWN0ZXIpLCB+c3VtKGlzLm5hKC54KSkpKQpgYGAKCgoKCg==</div>
 
 
 

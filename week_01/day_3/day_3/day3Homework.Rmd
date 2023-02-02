@@ -9,12 +9,17 @@ library(skimr)
 ```
 
 ```{r}
+library(CodeClanData)
+
+```
+
+```{r}
 movies 
 sum(is.na(movies
           ))
 ```
 
-###4803 observations, 13 columns.3942 NA in original dataset. I feel removing title, homepage, overview, and tagline would be the first step to clean up the data as they aren't particularly useful in an analytical context
+###4803 observations, 13 columns. 3942 NA in original dataset. I feel removing title, homepage, overview, and tagline would be the first step to clean up the data as they aren't particularly useful in an analytical context
 
 
 #Q2
@@ -43,20 +48,15 @@ movies_selected %>%
   filter(is.na(runtime))
 ```
 
+
 ###Two NAs in runtime column. No missing values in original_title or budget
 
 #Q4
 
 ```{r}
 movies_runtime <- movies_selected %>% 
-mutate(runtime = na_if(runtime, 0))
+mutate(runtime = na_if(runtime, 0)) 
 movies_runtime
-```
-
-
-```{r}
-movies_runtime <- movies_runtime %>% 
-  select(-runtime_na)
 ```
 
 #Q5
@@ -70,7 +70,7 @@ mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
 
 ```{r}
 movies_imputed %>% 
-  sum(is.na(movies_imputed))
+  summarise(is.na(movies_imputed))
 ```
 
 
@@ -112,7 +112,7 @@ movies_imputed %>%
 ##?????
 ```{r}
 movies %>% 
-  summarise(across(where(is.character), NA))
+  summarise(across(where(is.character), ~sum(is.na(.x))))
 ```
 
 
