@@ -1,0 +1,122 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(CodeClanData)
+library(tidyverse)
+library(janitor)
+library(dplyr)
+```
+
+```{r}
+read_csv(data/books.csv)
+```
+
+```{r}
+dim(books)
+
+head(books) 
+
+glimpse(books) #Keep title, authors, average_rating, num_pages, ratings_count
+
+sum(is.na(books)) #No NAs
+```
+
+ 
+```{r}
+books %>% 
+select(distinct(authors))
+```
+
+```{r}
+books_trimmed <- books %>% 
+  select(title, authors, average_rating, num_pages, ratings_count)
+```
+
+
+```{r}
+books_trimmed %>% 
+  group_by(authors) %>% 
+  summarise(median_author_rating = median(average_rating)) %>% 
+  arrange(desc(median_author_rating))
+```
+
+```{r}
+books_trimmed <- books_trimmed %>% 
+  mutate(ratings_count = na_if(ratings_count, 0))
+```
+
+```{r}
+books_trimmed <- books_trimmed %>% 
+  drop_na()
+```
+
+```{r}
+books_trimmed %>% 
+  group_by(authors) %>% 
+  mutate(median_author_rating = median(average_rating)) 
+```
+
+
+```{r}
+books_trimmed <- books_trimmed %>% 
+  group_by(authors) %>% 
+  mutate(median(average_rating)) 
+
+```
+
+```{r}
+books_trimmed <- books_trimmed %>% 
+  select(authors, ratings_count, `median(average_rating)`) 
+```
+
+
+```{r}
+books_trimmed <-  books_trimmed %>% 
+ rename("median_rating" =  "median(average_rating)" )
+
+books_trimmed
+  
+```
+
+
+```{r}
+books_trimmed_above_9 <- books_trimmed  %>% 
+  filter(median_rating >= 4.5)
+```
+
+
+```{r}
+books_trimmed_above_9 %>% 
+
+
+  summarise(authors, ratings_count, median_rating
+            ) %>% 
+  arrange(desc(ratings_count))
+  
+```
+
+
+
+```{r}
+books_trimmed_above_9 <- books_trimmed_above_9 %>% 
+  group_by(authors) %>% 
+  summarise(total_count = sum(ratings_count), median_rating = median(median_rating))
+```
+
+```{r}
+books_trimmed_above_9 %>% 
+  arrange(desc(total_count))
+```
+
+
+```{r}
+books_trimmed_JK_and_JRR <- books_trimmed_above_9 %>% 
+  filter(grepl("J.K. Rowling|J.R.R. Tolkien", authors))
+```
+
+
+
+
