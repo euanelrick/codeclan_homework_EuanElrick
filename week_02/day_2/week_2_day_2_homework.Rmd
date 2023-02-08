@@ -84,7 +84,8 @@ Q7
 ```{r}
 codeclan_hashtags <- code_clan_combined %>%
   select(tweet_id, hashtags) %>% 
-  mutate(hashtags = str_to_lower(hashtags))
+  mutate(hashtags = str_to_lower(hashtags)) %>% 
+  drop_na()
   
 ```
 
