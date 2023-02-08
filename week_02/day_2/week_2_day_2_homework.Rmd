@@ -1,0 +1,105 @@
+---
+title: "Day 2 Homework"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+
+```
+
+
+```{r}
+code_clan_tweets <- read_csv("data/code_clan_tweets.csv")
+
+code_clan_tweets
+```
+
+```{r}
+code_clan_info <- read_csv("data/code_clan_info.csv")
+
+code_clan_info
+
+```
+
+
+Q1
+
+```{r}
+nrow(code_clan_tweets) #Number of rows
+
+ncol(code_clan_tweets) # Number of columns
+
+names(code_clan_tweets) #Names of columns
+```
+
+
+Q2
+```{r}
+total_favourites <- code_clan_tweets %>% 
+  filter(screen_name == "CodeClanScot",
+         is_quote == FALSE) %>% 
+  group_by(screen_name) %>% 
+  summarise(total_favourites = sum(favorite_count)) %>% 
+  select(total_favourites) %>% 
+  pull()
+```
+
+
+
+Q3
+```{r}
+code_clan_tweets %>% 
+  filter(is_quote == FALSE) %>% 
+  group_by(source) %>% 
+  summarise(mean_retweets = mean(retweet_count))
+```
+
+
+Q4
+
+```{r}
+code_clan_tweets %>%
+  mutate(media_type = coalesce(media_type, "text")) %>% 
+  group_by(media_type) %>%
+  summarise(total_favourites = sum(favorite_count)) %>% 
+  arrange(desc(total_favourites))
+  
+  
+  
+  
+```
+
+Q5
+```{r}
+mean_characters <- code_clan_tweets %>% 
+  summarise(mean_characters = mean(display_text_width)) %>% 
+  pull()
+```
+
+
+Q6
+```{r}
+code_clan_combined <-  code_clan_info %>% 
+  full_join(code_clan_tweets, by = "tweet_id")
+```
+
+Q7
+```{r}
+codeclan_hashtags <- code_clan_combined %>%
+  select(tweet_id, hashtags) %>% 
+  mutate(hashtags = str_to_lower(hashtags))
+  
+```
+
+E1
+```{r}
+hashtag_pattern <- "c\\(+"
+
+
+
+codeclan_hashtags %>% 
+  hashtags <- str_sub(hashtags) %>% 
+  str_detect(hashtags, hashtag_pattern)
+```
+
+
