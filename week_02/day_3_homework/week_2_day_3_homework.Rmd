@@ -1,0 +1,101 @@
+---
+title: "Week 2 Day 3 Homework"
+output: html_notebook
+---
+```{r}
+library(tidyverse
+        )
+```
+
+
+
+Q1
+```{r}
+weather_info <- list(
+
+"Thursday" = list(temperature = 7, 
+                  rain_chance = 0, 
+                  wind_speed = 18),
+
+"Friday" = list(temperature = 10, 
+                rain_chance = 0, 
+                wind_speed = 20),
+
+"Saturday" = list(temperature = 10, 
+                  rain_chance = 0, 
+                  wind_speed = 15)
+  
+)
+```
+
+
+Q2
+```{r}
+weather_info$Thursday$rain_chance
+
+weather_info$Friday$wind_speed
+
+weather_info$Thursday$temperature
+```
+
+Q3
+```{r}
+weather_matrix <- matrix(nrow = 2, ncol = 7, c(8, 11, 11, 10, 9, 10, 9, 10, 10, 
+                                               10, 11, 10, 8, 9))
+```
+
+
+Q4
+```{r}
+weather_matrix[2, 3]
+
+
+weather_matrix[2, c(1:7)]
+
+
+weather_matrix[, c(1, 3, 5)]
+```
+
+Q5
+```{r}
+text_type_function <- function(x) {
+  
+  
+
+  if (is.character(x) == TRUE){
+    str_c("The answer is: ", x)
+  } else if(x < 10){
+    print(x)
+  } else{
+    print(x/10)
+  }
+  else{
+    print("invalid input")
+  }
+}
+  
+    
+    
+
+
+```
+
+
+
+```{r}
+text_type_function(5)
+
+
+
+```
+
+
+Q6
+
+
+
+
+
+
+
+
