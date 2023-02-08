@@ -35,13 +35,13 @@ names(code_clan_tweets) #Names of columns
 
 Q2
 ```{r}
-total_favourites <- code_clan_tweets %>% 
-  filter(screen_name == "CodeClanScot",
-         is_quote == FALSE) %>% 
-  group_by(screen_name) %>% 
-  summarise(total_favourites = sum(favorite_count)) %>% 
-  select(total_favourites) %>% 
-  pull()
+total_favourites <- code_clan_tweets %>% # Assigning new value
+  filter(screen_name == "CodeClanScot", # Filter for just CodeClanScot screen name
+         is_quote == FALSE) %>% # Filter for non-quote tweets
+  group_by(screen_name) %>% #Grouping by screen name
+  summarise(total_favourites = sum(favorite_count)) %>% # Summarising total count
+  select(total_favourites) %>% # changing column to just the total favourites
+  pull() # Pulling total favourites number
 ```
 
 
@@ -49,8 +49,8 @@ total_favourites <- code_clan_tweets %>%
 Q3
 ```{r}
 code_clan_tweets %>% 
-  filter(is_quote == FALSE) %>% 
-  group_by(source) %>% 
+  filter(is_quote == FALSE) %>% # Filtering for non-quoted tweets
+  group_by(source) %>% #Grouping by source
   summarise(mean_retweets = mean(retweet_count))
 ```
 
@@ -63,9 +63,6 @@ code_clan_tweets %>%
   group_by(media_type) %>%
   summarise(total_favourites = sum(favorite_count)) %>% 
   arrange(desc(total_favourites))
-  
-  
-  
   
 ```
 
