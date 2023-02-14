@@ -97,7 +97,7 @@ WHERE email LIKE '%@yahoo%';
 
 SELECT COUNT(*)
 FROM employees 
-WHERE ((country = 'France' OR country = 'Germany')
+WHERE ((country != 'France' and country != 'Germany')
         AND (pension_enrol = TRUE));
     
     
