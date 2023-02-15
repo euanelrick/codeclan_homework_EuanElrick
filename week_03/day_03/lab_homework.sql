@@ -2,7 +2,7 @@
  * Q1
  */
 
-SELECT count(id)
+SELECT count(id) AS n_employees_no_salary_or_grade
 FROM employees
 WHERE (grade IS NULL) AND (salary IS NUll);
 
@@ -28,7 +28,7 @@ LIMIT 10;
 /*Q4*/
 
 SELECT 
-        count(id),
+        count(id) AS n_2003_employees,
         department
 FROM employees 
 WHERE extract(YEAR FROM start_date) = '2003'
@@ -39,14 +39,14 @@ GROUP BY department;
 SELECT 
         department,
         fte_hours,
-        count(id)
+        count(id) AS n_employees_by_fte_and_department
 FROM employees 
 GROUP BY department, fte_hours 
 ORDER BY department, fte_hours NULLS last;
 
 /* Q6 */
 SELECT 
-        count(id),
+        count(id) AS n_employees,
         pension_enrol
 FROM employees
 GROUP BY pension_enrol;
@@ -56,15 +56,16 @@ GROUP BY pension_enrol;
 
 SELECT *
 FROM employees 
-WHERE pension_enrol IS NULL OR pension_enrol IS FALSE 
+WHERE (pension_enrol IS NULL OR pension_enrol IS FALSE)
+        AND department = 'Accounting'
 ORDER BY salary DESC NULLS LAST 
 LIMIT 1;
 
 /* Q8 */
 
 SELECT 
-        country,
-        count(id),
+        country ,
+        count(id) AS n_employees,
         avg(salary) AS average_salary
 FROM employees
 GROUP BY country 
@@ -96,8 +97,7 @@ WHERE (t."name" = 'Data Team 1')
 
 SELECT 
         e.first_name,
-        e.last_name,
-        pd.local_tax_code
+        e.last_name
 FROM employees AS e FULL JOIN pay_details AS pd 
         ON e.pay_detail_id = pd.id
 WHERE pd.local_tax_code IS NULL;
@@ -117,7 +117,7 @@ SELECT
         fte_hours
 FROM employees 
 GROUP BY fte_hours 
-ORDER BY count(id) DESC
+ORDER BY count(id) ASC
 LIMIT 1;
 
 SELECT 
@@ -135,7 +135,7 @@ WHERE
                             GROUP BY 
                                 fte_hours 
                             ORDER BY 
-                                count(id) DESC
+                                count(id) ASC
                             LIMIT 
                                 1)
                             )
@@ -167,7 +167,7 @@ ORDER BY
 
 SELECT 
         first_name,
-        count(id)
+        count(id) AS n_employees_with_name
 FROM 
         employees
 WHERE 
@@ -202,8 +202,6 @@ GROUP BY
         department;
     
 SELECT 
-        g1.grade_1_employees,
-        g0.grade_0_N_employees,
         g1.department,
         (CAST(g1.grade_1_employees AS NUMERIC) / 
         CAST(g0.grade_0_N_employees AS NUMERIC)) 
@@ -303,7 +301,7 @@ LIMIT
 /* Q2 */
     
 SELECT 
-        count(id),
+        count(id) AS n_employees,
         COALESCE(CAST(pension_enrol AS varchar), 'Unknown')
 FROM 
         employees
