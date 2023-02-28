@@ -1,0 +1,258 @@
+---
+title: "Week 5 Day 2 Homework"
+output: html_notebook
+---
+
+## Load in the libraries you need, and look at the backpack data. Take note of variable names and dimensions.
+
+```{r}
+library(CodeClanData)
+
+library(tidyverse)
+
+
+```
+
+
+
+```{r}
+backpack <- backpack
+
+glimpse(backpack)
+
+colSums(is.na(backpack))
+
+backpack %>% 
+distinct(backpack_weight)
+```
+
+
+
+## What is the distribution of backpack weights that students are carrying? Choose an appropriate graph to show the distribution.
+
+```{r}
+ggplot(backpack) +
+  aes(x = backpack_weight) +
+  geom_histogram(fill = "grey70", col = "black") +
+  theme_minimal() +
+  labs(
+    x = "\nBackpack Weight (lb)",
+    y = "Count\n",
+    title = "Distribution of Backpack Weights",
+    subtitle = "Data taken from university students\n"
+  ) +
+  scale_y_continuous(breaks = seq(from = 0, to = 13, by = 1)) +
+  scale_x_continuous(breaks = seq(from = 0, to = 36, by = 4))
+```
+The plot above shows how backpack weights are distributed by the number of 
+students backpacks that weighed that amount. From the data we can see the backpacks
+mostly weigh in between about 5 and 15 lbs.
+
+
+
+
+## Are there differences in backpack weight between sex?
+
+```{r}
+ggplot(backpack) +
+  aes(x = backpack_weight,
+      fill = sex) +
+  geom_histogram( col = "black") +
+  theme_minimal() +
+  facet_wrap(~sex, ncol = 1) +
+  labs(
+    x = "\nBackpack Weight (lb)",
+    y = "Count\n",
+    title = "Distribution of Backpack Weights",
+    subtitle = "Data taken from university students\n",
+    fill = "Sex"
+  )
+```
+
+From the plot above we can see that there is no real difference in the distribution
+of backpack weights between genders
+
+
+
+## What is the relationship between body weight and backpack weight?
+
+```{r}
+ggplot(backpack) +
+  aes(x = body_weight,
+      y = backpack_weight) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = FALSE) +
+  theme_minimal() +
+  labs(
+    x = "\nBody Weight (lb)",
+    y = "Backpack Weight (lb)\n",
+    title = "Body Weight vs Backpack Weight",
+    subtitle = "Data collected from university students\n"
+  )
+  
+
+```
+
+There is a weak positive correlation between the body weight of a student and 
+their backpack weights
+
+
+
+
+## Is this relationship different between men and women? Choose an appropriate 
+plot and interpret your findings.
+
+```{r}
+ggplot(backpack) +
+  aes(x = body_weight,
+      y = backpack_weight,
+      colour = sex) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = FALSE) +
+  theme_minimal() +
+  labs(
+    x = "\nBody Weight (lb)",
+    y = "Backpack Weight (lb)\n",
+    title = "Body Weight vs Backpack Weight",
+    subtitle = "Data collected from university students\n",
+    colour = "Sex"
+  )
+```
+
+There is a slightly stronger correlation between womens body weights and backpack 
+weights when compared to mens. However, neither are strong enough to draw
+conclusions from
+
+
+
+## What proportion of students report back pain?
+
+
+```{r}
+backpack %>% 
+  filter(back_problems == 1) %>% 
+  nrow() / 100
+```
+
+0.32 is the proportion of students suffering with back pain
+
+
+## Is this proportion different between men and women?
+
+
+``` {r}
+males_no_backpain <- backpack %>% 
+  filter((back_problems == 0) & (sex == "Male")) %>% 
+  nrow() 
+
+
+males_backpain_proportion <- backpack %>% 
+  filter((back_problems == 1) & (sex == "Male")) %>% 
+  nrow() / (males_no_backpain) 
+
+males_backpain_proportion
+```
+
+0.22 is the proportion of men suffering from back pain
+
+
+```{r}
+females_no_backpain <- backpack %>% 
+  filter((back_problems == 0) & (sex == "Female")) %>% 
+  nrow() 
+
+
+females_backpain_proportion <- backpack %>% 
+  filter((back_problems == 1) & (sex == "Female")) %>% 
+  nrow() / (females_no_backpain) 
+
+females_backpain_proportion
+```
+
+0.77 is the proportion of women who suffer from backpain
+
+
+## Now you’ve investigated your data separately, create plots to describe the 
+relationship between backpack weight, body weight, gender and reported backpain.
+
+```{r}
+backpack %>% 
+  mutate(back_problems = case_when(
+    back_problems == 0 ~ "No reported back problems",
+    back_problems == 1 ~ "Has reported back problems"
+  )) %>% 
+ggplot() +
+  aes(x = body_weight,
+      y = backpack_weight,
+      colour = as.factor(back_problems)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = FALSE) +
+  facet_wrap(~sex) +
+  theme_minimal() +
+  labs(
+    x = "\nBody Weight (lb)",
+    y = "Backpack Weight (lb)\n",
+    title = "Body Weight vs Backpack Weight",
+    subtitle = "Data collected from university students\n",
+    colour = "Back Problems"
+  ) 
+```
+
+For females there is a slightly stronger correlation between backpack weight and 
+body weight compared to men. However neither are convincing enough to draw 
+conclusions from. There doesnt seem to be much correlation between backpack
+weigh vs body weight with regards to whether a student has reported experiencing
+back pain.
+
+
+
+
+## Does reported backpain differ across the year groups? Ignore year 0 in your 
+data.
+
+```{r}
+
+ggplot(backpack) +
+  aes(x = year,
+      fill = as.factor(back_problems)) +
+  geom_bar(data = subset(backpack, year != 0)) +
+  scale_fill_discrete(labels = c("No reported back problems",
+                                 "Has reported back problems")) +
+  labs(
+    y = "Count\n",
+    x = "\nYear",
+    fill = "Back Problems",
+    title = "Proportion of Students with Back Problems across Year Groups\n"
+  ) +
+  theme_minimal()
+```
+
+No correlation between what year a student is in and how likely they are to have
+back problems
+
+
+## Is there a difference between how heavy the bags those in different years 
+## carry?
+
+```{r}
+backpack %>% 
+  group_by(year) %>% 
+  summarise(median_year_backpack = median(backpack_weight)) %>% 
+ggplot() +
+  aes(y = median_year_backpack,
+      x = year) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+Looking at the graph above I don't see any correlation between the year of the
+student and how heavy their backpack is.
+
+
+
+
+
+
