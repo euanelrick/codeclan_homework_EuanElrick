@@ -73,7 +73,7 @@ ggplot(qb_monthly_sales) +
     title = "Monthly Sales of the KwikBit Unit 1\n"
   ) +
   theme_minimal() + 
-  scale_y_continuous(limits = c(450, 650))
+  scale_y_continuous(limits = c(450, 625))
   
 ```
 
