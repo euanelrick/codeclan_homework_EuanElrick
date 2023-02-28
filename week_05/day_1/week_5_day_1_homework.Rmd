@@ -117,7 +117,7 @@ ggplot(qb_competitors) +
   geom_area(aes(x = year,
             y = revenue,
             fill = company)) +
-  scale_colour_manual(values = colscheme) +
+  scale_fill_manual(values = colscheme) +
   labs(
     y = "Revenue\n",
     x = "\nYear",
