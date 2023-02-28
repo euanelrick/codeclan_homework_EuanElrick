@@ -1,0 +1,180 @@
+---
+title: "Week 5 Day 1 Homework"
+output: html_notebook
+---
+
+```{r}
+library(CodeClanData)
+
+library(tidyverse)
+
+library(janitor)
+
+library(ggthemes)
+
+colscheme <- c("#E89FE9", "#50434F", "#B6A7B5", "#F9A472", "#BD7040")
+```
+
+
+```{r}
+qb_revenue_breakdown <- clean_names(qb_revenue_breakdown)
+
+qb_competitors <- clean_names(qb_competitors)
+
+qb_device_data <-  clean_names(qb_device_data)
+
+qb_monthly_sales <- clean_names(qb_monthly_sales)
+
+qb_revenue_breakdown
+
+```
+
+## Take the data in the dataset qb_revenue_breakdown and make a stacked bar 
+chart showing the sources of revenue across the two years in the dataset.
+
+
+```{r}
+
+ggplot(qb_revenue_breakdown) +
+  geom_col(aes(x = year,
+               y = revenue,
+               fill = product)) +
+  scale_fill_manual(values = colscheme) + 
+  labs(
+    y =  "Annual Revenue\n",
+    x = "\nYear",
+    fill = "Product"
+  ) +
+  theme_minimal()
+  
+```
+
+
+
+## Make a line chart showing monthly sales of the “flagship product” - the 
+‘KwikBit Unit 1’ - over the last year. This data is inside qb_monthly_sales, but 
+you will need to use filter() or subset() (base R).
+
+
+
+```{r}
+ggplot(qb_monthly_sales) +
+  geom_line(data = subset(qb_monthly_sales, 
+                              cashflow == "Kwikbit Unit 1 Sales"
+                              ), aes(
+                x = date,
+                y = amount
+                )
+            ) +
+  scale_colour_manual(values = colscheme) +
+  labs(
+    x = "\nDate",
+    y = "Monthly Sales\n",
+    title = "Monthly Sales of the KwikBit Unit 1\n"
+  ) +
+  theme_minimal() + 
+  scale_y_continuous(limits = c(450, 650))
+  
+```
+
+
+## Make a line chart showing monthly revenue and costs over the last year. This 
+## data is also in qb_monthly_sales.
+
+
+```{r}
+ggplot(qb_monthly_sales) +
+  geom_line(data = subset(qb_monthly_sales, 
+                              cashflow != "Kwikbit Unit 1 Sales"
+                              ), aes(
+                x = date,
+                y = amount,
+                colour = cashflow
+                )
+            ) +
+  scale_colour_manual(values = colscheme) +
+  labs(
+    x = "\nDate",
+    y = "Total Amount\n",
+    title = "Monthly Sales of the KwikBit Unit 1\n",
+    fill = "Cashflow"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 3000),
+                     breaks = c(0, 1000, 1500, 2000, 2500, 3000))
+  
+```
+
+
+## Show annual sales of personal fitness trackers over the last 5 years broken 
+## down by company as a ribbon plot (use geom_area). This data is in 
+## qb_competitors.
+
+
+
+```{r}
+ggplot(qb_competitors) +
+  geom_area(aes(x = year,
+            y = revenue,
+            fill = company)) +
+  scale_colour_manual(values = colscheme) +
+  labs(
+    y = "Revenue\n",
+    x = "\nYear",
+    fill = "Company",
+    title = "Annual Company Revenue\n"
+    ) +
+  theme_minimal()
+
+    
+  
+```
+
+
+## Now show the sales from the four competitors as a line graph. Include an 
+## extra layer that shows the data points used to make the lines.
+
+```{r}
+ggplot(qb_competitors) +
+  geom_line(aes(x = year,
+                y = revenue,
+                colour = company
+                )) +
+  geom_point(aes(x = year,
+                y = revenue,
+                colour = company
+                )) +
+  scale_colour_manual(values = colscheme) +
+  labs(
+    x = "\nYear",
+    y = "Revenue\n",
+    fill = "Company",
+    title = "Annual Revenue\n"
+  ) +
+  theme_minimal()
+```
+
+
+## Now the company wants to compare the number of steps that their device counts 
+## vs. their competitors. Make a line graph of the number of steps throughout 
+##time, and use faceting to compare between companies and people. The data for 
+## this is in qb_device_data.
+
+
+```{r}
+qb_device_united <- qb_device_data %>% 
+  mutate(mins = mins/60) %>% 
+  mutate(time = hours+mins) %>% 
+  select(-hours, -mins)
+
+
+
+ggplot(qb_device_united) +
+ geom_line(aes(x = time,
+      y = counts,
+      colour = id)) +
+  facet_wrap(device ~ id) +
+  scale_colour_manual(values = colscheme) +
+  theme_minimal()
+```
+
