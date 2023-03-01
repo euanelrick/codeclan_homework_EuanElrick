@@ -143,35 +143,35 @@ backpack %>%
 
 
 ``` {r}
-males_no_backpain <- backpack %>% 
-  filter((back_problems == 0) & (sex == "Male")) %>% 
+males <- backpack %>% 
+  filter((sex == "Male")) %>% 
   nrow() 
 
 
 males_backpain_proportion <- backpack %>% 
   filter((back_problems == 1) & (sex == "Male")) %>% 
-  nrow() / (males_no_backpain) 
+  nrow() / (males) 
 
 males_backpain_proportion
 ```
 
-0.22 is the proportion of men suffering from back pain
+0.18 is the proportion of men suffering from back pain
 
 
 ```{r}
-females_no_backpain <- backpack %>% 
-  filter((back_problems == 0) & (sex == "Female")) %>% 
+females<- backpack %>% 
+  filter((sex == "Female")) %>% 
   nrow() 
 
 
 females_backpain_proportion <- backpack %>% 
   filter((back_problems == 1) & (sex == "Female")) %>% 
-  nrow() / (females_no_backpain) 
+  nrow() / (females) 
 
 females_backpain_proportion
 ```
 
-0.77 is the proportion of women who suffer from backpain
+0.44 is the proportion of women who suffer from backpain
 
 
 ## Now you’ve investigated your data separately, create plots to describe the 
