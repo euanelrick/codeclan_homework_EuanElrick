@@ -1,0 +1,44 @@
+---
+title: "Plot Test Notebook"
+output: html_notebook
+---
+
+
+
+
+```{r}
+input <- list(
+  year_input = 2010,
+  genre_input = "Shooter"
+  
+)
+```
+
+
+
+
+
+
+```{r}
+p <- 
+  game_sales %>% 
+  filter(year_of_release == input$year_input,
+         genre == input$genre_input) %>% 
+ggplot() +
+  aes(x = platform,
+      y = sales,
+      fill = platform) +
+  geom_col()
+
+
+
+ggplotly(p) %>% 
+ add_trace(
+          text = ~name,
+          hoverinfo = "text",
+          showlegend = F)
+            
+```
+
+
+

@@ -106,12 +106,11 @@ server <- function(input, output, session) {
     }
     )
   output$click_info <- renderPrint({
-    # Because it's a ggplot2, we don't need to supply xvar or yvar; if this
-    # were a base graphics plot, we'd need those.
     nearPoints(game_sales, input$reviews_plot_click, threshold = 2,
                maxpoints = 3, allRows = FALSE)
   })
 }
+
 
 
 shinyApp(ui, server)
