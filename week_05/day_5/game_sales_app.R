@@ -12,6 +12,7 @@ genre_choices <- game_sales %>%
 
 
 ui <- fluidPage(
+  theme = bs_theme(bootswatch = "quartz"),
   titlePanel(tags$b("21st Century Game Sales")),
   sidebarLayout(
     sidebarPanel(
