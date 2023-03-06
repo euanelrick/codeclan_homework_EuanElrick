@@ -53,10 +53,10 @@ server <- function(input, output, session) {
             text = name) +
         geom_col() +
          theme_minimal(
-         )+
+         ) +
          guides(
            fill = "none"
-         )+
+         ) +
          labs(
            x = "Platform",
            y = "Total Sales",
