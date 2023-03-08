@@ -87,11 +87,27 @@ samsung_phones %>%
 
 ```{r}
 samsung_phones %>% 
+  filter(between(rating, (samsung_means$mean_rating - 2*(samsung_means$sd)),
+                        samsung_means$mean_rating + 2*(samsung_means$sd))) %>% 
+  summarise(proportion_2sd = n()/nrow(samsung_phones))
+```
+
+
+```{r}
+samsung_phones %>% 
   filter(rating>= (samsung_means$mean_rating - 2*(samsung_means$sd))) %>%
   filter(rating <= (samsung_means$mean_rating + 2*(samsung_means$sd))) %>%
   summarise(prop_within_2sd = n() / nrow(samsung_phones))
 ```
 0.92 is the proportion within 2 SD
+
+```{r}
+samsung_phones %>% 
+  filter(between(rating, (samsung_means$mean_rating - 3*(samsung_means$sd)),
+                        samsung_means$mean_rating + 3*(samsung_means$sd))) %>% 
+  summarise(proportion_3sd = n()/nrow(samsung_phones))
+```
+
 
 
 ```{r}
