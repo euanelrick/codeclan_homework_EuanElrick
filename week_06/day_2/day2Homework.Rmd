@@ -71,6 +71,14 @@ Q4
 
 ```{r}
 samsung_phones %>% 
+  filter(between(rating, (samsung_means$mean_rating - samsung_means$sd),
+                        samsung_means$mean_rating + samsung_means$sd)) %>% 
+  summarise(proportion_1sd = n()/nrow(samsung_phones))
+```
+
+
+```{r}
+samsung_phones %>% 
   filter(rating>= samsung_means$mean_rating - samsung_means$sd) %>%
   filter(rating <= samsung_means$mean_rating + samsung_means$sd) %>%
   summarise(prop_within_1sd = n() / nrow(samsung_phones))
