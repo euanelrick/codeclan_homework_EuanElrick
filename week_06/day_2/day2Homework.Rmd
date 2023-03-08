@@ -1,0 +1,96 @@
+---
+title: "Homework"
+output: html_notebook
+---
+
+Q1 
+
+```{r}
+library(tidyverse)
+library(e1071)
+library(janitor)
+library(patchwork)
+```
+
+```{r}
+
+items <- read_csv("data/20190928-items.csv") %>% 
+  clean_names()
+
+```
+
+Q2
+
+```{r}
+items %>% 
+  group_by(brand) %>% 
+  summarise(count = n()) %>% 
+  slice_max(count, with_ties = TRUE)
+```
+
+Samsung has the most phone with 397 phones
+
+
+Q3
+
+```{r}
+samsung_phones <- items %>% 
+  filter(brand == "Samsung")
+```
+
+
+```{r}
+samsung_means <- samsung_phones %>% 
+  summarise(mean_rating = mean(rating),
+            sd = sd(rating))
+
+# Mean = 3.57, sd = 0.685
+```
+
+```{r}
+
+samsung_phones %>% 
+  ggplot(aes(x = rating)) +
+  geom_histogram(aes(y = after_stat(density)), col = "white", binwidth = 0.2) +
+  stat_function(
+    fun = dnorm,
+    args = list(
+      mean = samsung_means$mean_rating,
+      sd = samsung_means$sd
+    ),
+    col = "steelblue"
+  )
+
+```
+
+The normal distribution maps well to the histogram, bar two outliers
+
+
+Q4
+
+
+```{r}
+samsung_phones %>% 
+  filter(rating>= samsung_means$mean_rating - samsung_means$sd) %>%
+  filter(rating <= samsung_means$mean_rating + samsung_means$sd) %>%
+  summarise(prop_within_1sd = n() / nrow(samsung_phones))
+```
+0.79 is the proportion within 1 SD
+
+```{r}
+samsung_phones %>% 
+  filter(rating>= (samsung_means$mean_rating - 2*(samsung_means$sd))) %>%
+  filter(rating <= (samsung_means$mean_rating + 2*(samsung_means$sd))) %>%
+  summarise(prop_within_2sd = n() / nrow(samsung_phones))
+```
+0.92 is the proportion within 2 SD
+
+
+```{r}
+samsung_phones %>% 
+  filter(rating>= (samsung_means$mean_rating - 3*(samsung_means$sd))) %>%
+  filter(rating <= (samsung_means$mean_rating + 3*(samsung_means$sd))) %>%
+  summarise(prop_within_3sd = n() / nrow(samsung_phones))
+
+```
+0.98 is the proportion within 3 SD
