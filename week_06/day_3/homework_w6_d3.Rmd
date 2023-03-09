@@ -1,0 +1,160 @@
+---
+title: "Week 6 Day 3 Homework"
+output: html_notebook
+---
+
+```{r}
+library(janitor)
+library(tidyverse)
+library(e1071)
+library(infer)
+```
+
+Q1 
+
+```{r}
+ames <- clean_names(read_csv("data/ames.csv"))
+```
+
+```{r}
+glimpse(ames)
+
+head(ames)
+```
+
+
+Q2
+
+```{r}
+ames %>% 
+  ggplot() +
+  aes(x = lot_area) +
+  geom_histogram(binwidth = 5000)
+```
+
+```{r}
+ames %>% 
+  summarise(
+    skewness = skewness(lot_area)
+  )
+```
+```{r}
+ames %>% 
+  filter(lot_area <= 25000) %>% 
+  summarise(skewness = skewness(lot_area))
+```
+
+The data is positively skewed very heavily, with a skewness of 12.8. Up to about
+25000 the data is distributed fairly normally with a skewness of 0.54
+
+
+Q3
+
+```{r}
+
+infer_area <- ames %>%
+  specify(response = lot_area) %>% 
+  generate(reps = 5000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+infer_area
+
+```
+
+```{r}
+infer_area %>% 
+  visualise(bins = 30)
+  
+```
+
+
+Q4
+
+
+```{r}
+ci_95 <- infer_area %>% 
+  get_ci(level = 0.95,
+         type = "percentile")
+```
+
+
+```{r}
+infer_area %>% 
+  visualise(bins = 30) +
+  shade_ci(endpoints = ci_95)
+```
+
+
+Q5
+
+```{r}
+ci_99 <- infer_area %>% 
+  get_ci(level = 0.99,
+         type = "percentile")
+```
+
+
+```{r}
+infer_area %>% 
+  visualise(bins = 30) +
+  shade_ci(endpoints = ci_99)
+```
+
+The shaded area is wider. This is expected as to be 99% confident on the area a 
+random mean of lot area would fall in we need to cover a larger number of potential
+values.
+
+
+Q6
+
+```{r}
+mean_lot_area <- infer_area %>% 
+  summarise(
+    mean_area = mean(stat)
+  )
+
+mean_lot_area
+```
+
+The point estimate of the lot area in the sampled data is 10146.5 units^2
+
+
+
+Extension
+
+
+```{r}
+ames_1920 <- ames %>%
+  select(year_built) %>% 
+ mutate(pre_1920 = case_when(
+   year_built < 1920 ~ "Yes",
+   TRUE ~ "No"
+ ))
+  
+```
+
+```{r}
+bootstrap_1920 <- ames_1920 %>% 
+  specify(response = pre_1920, success = "Yes") %>% 
+  generate(reps = 5000, type = "bootstrap") %>% 
+  calculate(stat = "prop")
+```
+
+```{r}
+ci_1920_95 <- bootstrap_1920 %>% 
+  get_ci(level = 0.95, type = "percentile")
+```
+
+```{r}
+bootstrap_1920 %>% 
+  visualise() +
+  shade_ci(endpoints = ci_1920_95)
+```
+
+```{r}
+mean_1920_prop <- bootstrap_1920 %>% 
+  summarise(
+    mean = mean(stat)
+  )
+```
+

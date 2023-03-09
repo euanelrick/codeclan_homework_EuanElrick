@@ -36,10 +36,8 @@ Q3
 ```{r}
 samsung_phones <- items %>% 
   filter(brand == "Samsung")
-```
 
 
-```{r}
 samsung_means <- samsung_phones %>% 
   summarise(mean_rating = mean(rating),
             sd = sd(rating))
@@ -51,19 +49,19 @@ samsung_means <- samsung_phones %>%
 
 samsung_phones %>% 
   ggplot(aes(x = rating)) +
-  geom_histogram(aes(y = after_stat(density)), col = "white", binwidth = 0.2) +
+  geom_histogram(aes(y = after_stat(density)), col = "#ccff00", binwidth = 0.2) +
   stat_function(
     fun = dnorm,
     args = list(
       mean = samsung_means$mean_rating,
       sd = samsung_means$sd
     ),
-    col = "steelblue"
+    col = "navy"
   )
 
 ```
 
-The normal distribution maps well to the histogram, bar two outliers
+The normal distribution maps well to the histogram, bar three outliers.
 
 
 Q4
@@ -72,7 +70,7 @@ Q4
 ```{r}
 samsung_phones %>% 
   filter(between(rating, (samsung_means$mean_rating - samsung_means$sd),
-                        samsung_means$mean_rating + samsung_means$sd)) %>% 
+                        (samsung_means$mean_rating + samsung_means$sd))) %>% 
   summarise(proportion_1sd = n()/nrow(samsung_phones))
 ```
 
@@ -88,7 +86,7 @@ samsung_phones %>%
 ```{r}
 samsung_phones %>% 
   filter(between(rating, (samsung_means$mean_rating - 2*(samsung_means$sd)),
-                        samsung_means$mean_rating + 2*(samsung_means$sd))) %>% 
+                        (samsung_means$mean_rating + 2*(samsung_means$sd)))) %>% 
   summarise(proportion_2sd = n()/nrow(samsung_phones))
 ```
 
@@ -104,7 +102,7 @@ samsung_phones %>%
 ```{r}
 samsung_phones %>% 
   filter(between(rating, (samsung_means$mean_rating - 3*(samsung_means$sd)),
-                        samsung_means$mean_rating + 3*(samsung_means$sd))) %>% 
+                        (samsung_means$mean_rating + 3*(samsung_means$sd)))) %>% 
   summarise(proportion_3sd = n()/nrow(samsung_phones))
 ```
 
@@ -117,4 +115,17 @@ samsung_phones %>%
   summarise(prop_within_3sd = n() / nrow(samsung_phones))
 
 ```
+
+
 0.98 is the proportion within 3 SD
+
+```{r}
+samsung_phones %>% 
+  summarise(skewness = skewness(rating, type = 1))
+```
+
+
+
+
+
+
