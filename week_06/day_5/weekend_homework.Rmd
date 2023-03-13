@@ -1,0 +1,255 @@
+---
+title: "Hypothesis Testing & Probability"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(infer)
+library(janitor)
+library(e1071)
+```
+
+1.1
+
+Q1
+
+```{r}
+data("msleep")
+
+head(msleep)
+
+glimpse(msleep)
+
+rowSums(is.na(msleep))
+```
+
+
+Q2
+
+Null Hypothesis: Mean sleep total in sampled population is 7hrs
+
+Alternative Hypothesis: Mean sleep total in sampled population is not equal to 
+7hrs
+
+CI: 5%
+
+```{r}
+observed_sleep_stat <- msleep %>% 
+  summarise(
+    mean_sleep = mean(sleep_total)
+  )
+```
+
+
+```{r}
+
+null_distribution_msleep <- msleep %>% 
+  specify(response = sleep_total) %>% 
+  hypothesise(null = "point", mu = 7) %>% 
+  generate(reps = 30000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+```
+
+```{r}
+null_distribution_msleep %>% 
+  visualise(bins =30) +
+  shade_pvalue(obs_stat = observed_sleep_stat,
+               direction = "both")
+```
+
+```{r}
+(p_value_sleep <- null_distribution_msleep %>% 
+  get_pvalue(obs_stat = observed_sleep_stat,
+
+             direction = "both"))
+```
+
+The p-value is less than 5% therefore we can reject the null hypothesis as the 
+mean sleep in the sampled population does not suggest most animals sleep for 7 hrs
+a night
+
+
+
+
+Q3
+
+Null Hypothesis: Mean sleep total is the same for omnivores and herbivores
+
+Alternative Hypothesis: Mean sleep total in sampled population is significantly
+different between omnivores and herbivores
+
+
+CI: 5%
+
+
+
+```{r}
+msleep %>% 
+  distinct(vore)
+```
+
+```{r}
+msleep_vore <- msleep %>% 
+  filter(vore %in% c("omni", "herbi")) 
+```
+
+
+```{r}
+obs_vore_stat <- msleep_vore %>% 
+  specify(sleep_total ~ vore) %>% 
+  calculate(stat = "diff in means",
+            order = c("omni",
+                      "herbi"))
+```
+
+
+```{r}
+null_dist_vore <- msleep_vore %>% 
+  specify(sleep_total ~ vore) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 10000, 
+           type = "permute") %>% 
+  calculate(stat = "diff in means",
+            order = c("omni",
+                      "herbi"))
+```
+
+```{r}
+null_dist_vore %>% 
+  visualise(bins = 30) +
+  shade_pvalue(obs_stat = obs_vore_stat,
+               direction = "greater")
+```
+
+```{r}
+null_dist_vore %>% 
+get_pvalue(obs_stat = obs_vore_stat,
+           direction = "greater")
+
+```
+
+With a p-value of 0.12 we cant reject the null hypothesis, and so we can
+say the mean sleep for omnivores and herbivores is not significantly different
+
+
+Q4
+
+Null hypothesis: The proportion of domesticated animals in the population is 5%
+
+Alternative hypothesis: The proportion of domesticated animals in the population
+is greater than 5%
+
+CI: 5%
+
+
+
+```{r}
+msleep_domestic <- msleep %>% 
+  mutate(domesticated = case_when(
+    conservation == "domesticated" ~ "Yes",
+    TRUE ~ "No"
+  ))
+```
+
+
+```{r}
+domestic_prop <- msleep_domestic %>% 
+  summarise(prop =
+    (sum(domesticated == "Yes"))/nrow(msleep_domestic)
+  )
+```
+
+
+
+```{r}
+null_dom_distribution <- msleep_domestic %>% 
+  specify(response = domesticated,
+          success = "Yes") %>% 
+  hypothesise(null = "point",
+              p = 0.05) %>% 
+  generate(reps = 30000,
+           type = "draw") %>% 
+  calculate(stat = "prop")
+```
+
+
+
+```{r}
+null_dom_distribution %>% 
+  visualise() +
+  shade_pvalue(obs_stat = domestic_prop,
+               direction = "greater")
+```
+
+```{r}
+null_dom_distribution %>% 
+  get_p_value(obs_stat = domestic_prop,
+              direction = "greater")
+```
+With a p-value of 0.008 and a CI of 5% we can reject the null hypothesis that
+5% of the animals are domesticated, and can say that significantly more than 5% 
+of animals in the sample are domesticated.
+
+
+1.2
+
+Q1
+
+Null hypothesis: proportion of towns population who know about the coffee shop 
+is 0.4
+
+Alternative hypothesis: The proportion of people who know about the coffee shop 
+is more than 0.4
+
+We would use a draw method to generate the null distributiom
+
+
+
+Q2
+
+Null hypothesis: The position of the banner has no effect on click-through rate,
+and the click through rate is the same for both groups
+
+Alternative hypothesis: One of the banner positions has a higgher CTR than the 
+other
+
+Use the draw method to generate the null distribution
+
+
+
+Q3
+
+Null hypothesis: The parts all meet the dimensions criteria
+
+Alternative hypothesis: The parts do not all meet the dimensions criteria and have
+drifted
+
+Use bootstrapping to generate the null distribution
+
+
+1.3
+
+Q1
+
+The p-value is greater than the CI of 5%. This suggests that the proportion from
+the sample would be 7% likely to fall in the null-distribution. Therefore
+we can't reject the null hypothesis.
+
+
+Q2
+
+The CI is greater than the p-value so we have to reject the null hypothesis as
+one of the banner shas a higher CTR than the other
+
+Q3
+
+p-value is considerable higher than the CI. Therefore the parts dimensions have 
+drifted significantly and we must go with the alternaive hypothesis:
+
+
+
+
+
+
+
