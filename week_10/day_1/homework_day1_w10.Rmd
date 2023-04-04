@@ -1,0 +1,75 @@
+---
+title: "Week 10 Day 1 Homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(modelr)
+library(broom)
+library(janitor)
+library(ggfortify)
+```
+
+
+```{r}
+project <- clean_names(read_csv("data/project_management.csv"))
+```
+
+```{r}
+project %>% 
+  ggplot()+
+  aes(x = estimated_length,
+      y = actual_length) +
+  geom_point()
+
+```
+
+```{r}
+project %>% 
+  summarise(r = cor(x = estimated_length, y = actual_length))
+```
+
+r = 0.805. This indicates a very strong positive linear correlation
+
+
+```{r}
+model <- lm(formula = actual_length ~ estimated_length,
+            data = project)
+
+model
+```
+
+```{r}
+glance(model)
+```
+
+The estimated length coefficient says that for every day the estimated length
+of the project increases by, the actual length increases by 1.223 days
+
+R^2 of 0.647 means we can explain 64.7% of the variation in actual length using
+estimated length as a predictor.
+
+
+```{r}
+tidy(model)
+```
+
+The p-value of estimated length is < 0.001, therefore we can say a change in 
+estimated length is statistically significant in regards to a change in actual
+length.
+
+```{r}
+autoplot(model)
+```
+
+The qq plot suggests a normal distribution of the data. However, the 
+scale-location plot, and the residual vs fitted plot suggest a lack independence,
+and a lack of heteroscedasticity.
+
+
+
+
+
+
+
