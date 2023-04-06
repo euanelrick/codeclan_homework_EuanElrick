@@ -1,0 +1,278 @@
+---
+title: "w10 d3 homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(modelr)
+library(ggfortify)
+library(GGally)
+```
+
+
+
+```{r}
+
+kc_housing <- read_csv("data/kc_house_data.csv")
+
+head(kc_housing)
+
+kc_trimmed <- kc_housing %>% 
+  select(-id,
+         -date,
+         -sqft_living15,
+         -sqft_lot15,
+         -lat,
+         -long) %>%
+    rename("renovated" = yr_renovated,
+           "basement" = sqft_basement) %>% 
+  mutate(zipcode = as.factor(zipcode),
+         view = as.factor(view),
+         waterfront = as.factor(waterfront),
+        renovated = case_when(
+           renovated == 0 ~ "0",
+           TRUE ~ "1"
+         ),
+        renovated = as.factor(renovated),
+        condition = as.factor(condition),
+        basement = case_when(
+          basement == 0 ~ "0",
+           TRUE ~ "1"
+         ),
+        basement = as.factor(basement))
+
+
+head(kc_trimmed)
+
+```
+
+```{r}
+alias(price ~ .,
+     kc_trimmed)
+```
+```{r}
+ggpairs(kc_trimmed %>% 
+          select(-zipcode,
+                 -waterfront,
+                 -view,
+                 -condition,
+                 -renovated,
+                 -basement),
+        progress = FALSE)
+```
+
+price ~ sqft_living = 0.702
+          grade = 0.667
+          sqft_above = 0.606
+          bathrooms = 0.525
+          bedrooms = 0.308
+
+
+```{r}
+ggpairs(kc_trimmed %>% 
+          select(
+                 waterfront,
+                 view,
+                 condition,
+                 renovated,
+                 basement,
+                 price),
+        progress = FALSE)
+```
+
+
+```{r}
+mod1a <- lm(formula = log10(price) ~ log10(sqft_living),
+           data = kc_trimmed) 
+
+mod1b <- lm(formula = log10(price) ~ log10(sqft_above),
+           data = kc_trimmed) 
+
+mod1c <- lm(formula = log10(price) ~ grade,
+           data = kc_trimmed) 
+```
+
+
+```{r}
+autoplot(mod1a)
+
+autoplot(mod1b)
+
+autoplot(mod1c)
+```
+
+
+```{r}
+summary(mod1a)
+
+summary(mod1b)
+
+summary(mod1c)
+```
+
+
+log10(price) ~ grade is best model
+
+
+```{r}
+kc_housing_resid <- kc_trimmed %>% 
+  add_residuals(mod1c, var = "price_resid") %>% 
+  select(-price, -grade)
+```
+
+
+```{r}
+kc_housing_resid %>% 
+  select(-zipcode,
+         -bedrooms,
+         -bathrooms,
+         -sqft_living,
+         -sqft_above,
+         -sqft_lot,
+         -floors,
+         -yr_built) %>% 
+  ggpairs(progress = FALSE)
+```
+
+sqft_living, bathrooms, waterfront = most interesting variables wrt price_resid
+
+
+```{r}
+mod2a <- lm(formula = log10(price) ~ grade + sqft_living,
+            data = kc_trimmed)
+
+mod2b <- lm(formula = log10(price) ~ grade + bathrooms,
+            data = kc_trimmed)
+
+mod2c <- lm(formula = log10(price) ~ grade + waterfront,
+            data = kc_trimmed)
+
+
+```
+
+
+```{r}
+
+summary(mod2a)
+
+summary(mod2b)
+
+summary(mod2c)
+
+```
+
+```{r}
+autoplot(mod2a)
+```
+
+
+sqft_living has the highest r^2, lowest residual error, has significance,
+and the diagnostic plots pass
+
+
+```{r}
+kc_housing_resid <- kc_trimmed %>%
+  add_residuals(mod2a, "price_resid") %>% 
+  select(-price, -grade, -sqft_living)
+```
+
+
+```{r}
+kc_housing_resid %>% 
+  select(-zipcode,
+         price_resid,
+         bedrooms,
+         bathrooms,
+         sqft_above,
+         sqft_lot,
+         yr_built,
+         floors) %>% 
+  ggpairs()
+```
+
+yr_built, waterfront
+
+```{r}
+mod3a <- lm(formula = log10(price) ~ grade + sqft_living + yr_built,
+            data = kc_trimmed)
+            
+mod3b <- lm(formula = log10(price) ~ grade + sqft_living + waterfront,
+            data = kc_trimmed)
+```
+
+
+```{r}
+summary(mod3a)
+
+summary(mod3b)
+```
+
+yr_built has a higher r^2, lower resid se, both significant
+
+```{r}
+autoplot(mod3a)
+```
+
+diagnostics pass
+
+
+```{r}
+kc_housing_resid <- kc_trimmed %>%
+  add_residuals(mod3a, "price_resid") %>% 
+  select(-price, -grade, -sqft_living, -yr_built)
+```
+
+
+```{r}
+kc_housing_resid %>% 
+  select(price_resid,
+         waterfront,
+         view,
+         condition,
+         basement,
+         renovated) %>% 
+  ggpairs()
+```
+
+floors, waterfront
+
+
+```{r}
+mod4a <- lm(formula = log10(price) ~ grade + sqft_living + yr_built + floors,
+            data = kc_trimmed)
+
+mod4b <- lm(formula = log10(price) ~ grade + sqft_living + yr_built + waterfront,
+            data = kc_trimmed)
+```
+
+
+```{r}
+summary(mod4a)
+
+summary(mod4b)
+```
+
+
+Both have almost identical R^2, resid standard error, and significance
+
+```{r}
+autoplot(mod4a)
+
+autoplot(mod4b)
+```
+
+Diagnostics plots almost the same.
+
+waterfront has higher R^2 value
+
+
+```{r}
+kc_housing_resid <- kc_trimmed %>% 
+  add_residuals(mod4b, var = "price_resid") %>% 
+  select(-price, -yr_built, -waterfront, -grade, -sqft_living)
+```
+
+
+
+

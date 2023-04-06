@@ -30,7 +30,7 @@ housing_trimmed <- housing_prices %>%
 ```
 
 ```{r}
-ggpairs(housing_trimmed)
+ggpairs(housing_trimmed, progress = FALSE)
 ```
 
 
@@ -66,11 +66,11 @@ distinct(ocean_proximity
 
 4 dummy variables
 
-
 ```{r}
 model <- lm(formula = median_house_value ~ median_income,
             data = housing_trimmed)
 ```
+
 
 ```{r}
 autoplot(model)
@@ -105,3 +105,25 @@ If median income increases by 10000 USD, the median_house_value increases by
 
 If housing_median_age increases by 1 then median_house_value increased by 1567.98
 if everything else stays the same.
+
+
+
+```{r}
+housing_clean <- housing_prices %>% 
+  mutate(mean_rooms = total_rooms/households) %>% 
+  mutate(mean_bedrooms = total_bedrooms/households) %>% 
+  filter(median_house_value < 500000)
+  
+```
+
+
+```{r}
+ggpairs(housing_clean)
+```
+
+
+
+
+
+
+
