@@ -1,0 +1,318 @@
+---
+title: ""
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(ggfortify)
+library(GGally)
+library(skimr)
+library(modelr)
+```
+
+```{r}
+wine_quality_red <- read_csv("data/wine_quality_red.csv")
+
+wine_quality_white <- read_csv("data/wine_quality_white.csv")
+```
+
+```{r}
+head(wine_quality_red)
+skim(wine_quality_red)
+
+wine_quality_red %>% 
+  distinct(region)
+```
+
+```{r}
+head(wine_quality_white)
+skim(wine_quality_white)
+wine_quality_white %>% 
+  distinct(region)
+```
+
+```{r}
+wine_quality_red %>% 
+  ggplot(aes(x = quality)) +
+  geom_histogram()
+```
+
+```{r}
+wine_quality_white %>% 
+  ggplot(aes(x = quality)) +
+  geom_histogram()
+```
+
+
+
+
+
+```{r}
+
+ggpairs(wine_quality_red %>% 
+          select(-wine_id,
+                 -region))
+
+```
+
+quality ~ volatile_acidity, sulphates, alcohol
+
+```{r}
+ggpairs(wine_quality_white %>% 
+          select(-wine_id,
+                 -region),
+        progress = FALSE)
+```
+
+quality ~ alcohol, chlorides, density
+
+
+```{r}
+model_r1a <- lm(quality ~ volatile_acidity,
+                data = wine_quality_red)
+
+model_r1b <- lm(quality ~ sulphates,
+                data = wine_quality_red)
+
+model_r1c <- lm(quality ~ alcohol,
+                data = wine_quality_red)
+
+```
+
+```{r}
+model_w1a <- lm(quality ~ alcohol,
+                data = wine_quality_white)
+
+model_w1b <- lm(quality ~ chlorides,
+                data = wine_quality_white)
+
+model_w1c <- lm(quality ~ density,
+                data = wine_quality_white)
+```
+
+```{r}
+autoplot(model_r1a)
+
+autoplot(model_r1b)
+
+autoplot(model_r1c)
+```
+
+
+```{r}
+summary(model_r1a)
+
+summary(model_r1b)
+
+summary(model_r1c)
+```
+
+alcohol is best for red wrt quality
+
+
+```{r}
+autoplot(model_w1a)
+
+autoplot(model_w1b)
+
+autoplot(model_w1c)
+```
+
+
+```{r}
+summary(model_w1a)
+
+summary(model_w1b)
+
+summary(model_w1c)
+```
+
+alcohol best for white wrt quality
+
+
+```{r}
+red_resid <- wine_quality_red %>% 
+  add_residuals(model = model_r1c) %>% 
+  select(-region, -quality, -alcohol)
+```
+
+```{r}
+white_resid <- wine_quality_white %>% 
+  add_residuals(model = model_w1a) %>% 
+  select(-region, -quality, -alcohol)
+```
+
+```{r}
+ggpairs(red_resid,
+        progress = FALSE)
+```
+
+volatile_acidity, sulphates
+
+
+
+
+```{r}
+ggpairs(white_resid,
+        progress = FALSE)
+```
+
+volatile_acidity, free_sulfur_dioxide
+
+```{r}
+model_r2a <- lm(formula = quality ~ alcohol + volatile_acidity,
+                data = wine_quality_red)
+
+model_r2b <- lm(formula = quality ~ alcohol + sulphates,
+                data = wine_quality_red)
+```
+
+
+```{r}
+model_w2a <- lm(formula = quality ~ alcohol + volatile_acidity,
+                data = wine_quality_white)
+
+model_w2b <- lm(formula = quality ~ alcohol + free_sulfur_dioxide,
+                data = wine_quality_white)
+```
+
+```{r}
+autoplot(model_r2a)
+
+autoplot(model_r2b)
+```
+
+
+```{r}
+summary(model_r2a)
+
+summary(model_r2b)
+```
+
+
+volatile_acidity for new red_ model_resid
+
+```{r}
+anova(model_r1c, model_r2a)
+
+```
+
+```{r}
+red_resid <- wine_quality_red %>% 
+  add_residuals(model = model_r2a, "resid") %>% 
+  select(-wine_id, -quality, -alcohol, -volatile_acidity)
+```
+
+
+```{r}
+autoplot(model_w2a)
+
+autoplot(model_w2b)
+```
+
+
+
+```{r}
+summary(model_w2a)
+
+summary(model_w2b)
+```
+
+volatile_acidity 
+
+
+```{r}
+anova(model_w1a, model_w2a)
+```
+
+
+
+```{r}
+white_resid <- wine_quality_white %>% 
+  add_residuals(model_w2a, "white_resid") %>% 
+  select(-wine_id, -quality, -alcohol, -volatile_acidity)
+  
+```
+
+
+```{r}
+ggpairs(red_resid,
+        progress = FALSE)
+```
+
+will add sulphates and compare adjr^2
+
+```{r}
+model_r3 <- lm(formula = quality ~ alcohol + volatile_acidity + sulphates,
+               data = wine_quality_red)
+
+autoplot(model_r3)
+
+summary(model_r3)
+```
+
+sulphates is significant
+
+```{r}
+summary(model_r2a)
+
+summary(model_r3)
+```
+
+adjr^2 goes up so will add
+
+```{r}
+red_resid <- wine_quality_red %>% 
+  add_residuals(model_r3, "red_resid") %>% 
+  select(-wine_id, -quality, -alcohol, -volatile_acidity, -sulphates)
+```
+
+
+```{r}
+ggpairs(white_resid,
+        progress = FALSE)
+```
+
+will try residual sugar
+
+```{r}
+model_w3 <- lm(formula = quality ~ alcohol + volatile_acidity + residual_sugar,
+                data = wine_quality_white)
+
+autoplot(model_w3)
+```
+
+
+```{r}
+summary(model_w3) 
+summary(model_w2a)
+```
+
+
+residual sugar passes
+
+
+```{r}
+white_resid <- wine_quality_white %>% 
+  add_residuals(model = model_w3, "white_resid") %>% 
+  select(-wine_id, -quality, -alcohol, -volatile_acidity, -residual_sugar)
+```
+
+```{r}
+ggpairs(red_resid,
+        progress = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

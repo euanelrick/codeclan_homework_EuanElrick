@@ -1,0 +1,67 @@
+---
+title: "Quiz"
+output: html_notebook
+---
+
+
+Q1.
+
+Overfitting
+
+
+Q2.
+
+Lower AIC is better
+
+
+Q3.
+
+The first model. It isn't overfit
+
+
+Q4.
+
+Potentially overfitting. The rmse should be higher on the test dataset
+
+
+Q5.
+
+A dataset is split into k equal parts. 1 of the parts is used as the validation
+set, and all the other parts are used as the training set. It is then repeated
+for each individual part being the validation set. The average performance is 
+then calculated for each set. 
+
+
+Q6
+
+A validation set is what you used your trained model on to test it. The 
+validation set is used to choose the best performing model
+
+
+
+Q7
+
+Backwards selection works by selecting every possible feature in a model and 
+removing them one by one until the optimal model is reached. The model is
+validated at each step.
+
+
+Q8
+
+Best subset selection searches trhough every possible combination of features in 
+a model to find which model is the optimal choice.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

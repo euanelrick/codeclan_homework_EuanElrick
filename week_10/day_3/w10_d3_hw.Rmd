@@ -100,13 +100,14 @@ autoplot(mod1a)
 autoplot(mod1b)
 
 autoplot(mod1c)
+
 ```
 
 
 ```{r}
 summary(mod1a)
 
-summary(mod1b)
+summary(mod1b) 
 
 summary(mod1c)
 ```
@@ -239,10 +240,10 @@ floors, waterfront
 
 
 ```{r}
-mod4a <- lm(formula = log10(price) ~ grade + sqft_living + yr_built + floors,
+mod4a <- lm(formula = log10(price) ~ grade + sqft_living + yr_built + waterfront,
             data = kc_trimmed)
 
-mod4b <- lm(formula = log10(price) ~ grade + sqft_living + yr_built + waterfront,
+mod4b <- lm(formula = log10(price) ~ as.factor(grade) + sqft_living + yr_built + waterfront,
             data = kc_trimmed)
 ```
 
@@ -272,6 +273,15 @@ kc_housing_resid <- kc_trimmed %>%
   add_residuals(mod4b, var = "price_resid") %>% 
   select(-price, -yr_built, -waterfront, -grade, -sqft_living)
 ```
+
+
+
+
+
+
+
+
+
 
 
 
