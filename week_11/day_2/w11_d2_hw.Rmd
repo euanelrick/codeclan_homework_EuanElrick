@@ -1,0 +1,159 @@
+---
+title: "hw"
+output: html_notebook
+---
+
+```{r}
+library(rpart)
+library(caret)
+library(rpart.plot)
+library(tidyverse)
+library(modelr)
+library(yardstick)
+library(ranger)
+library(GGally)
+titanic_set <- read_csv('data/titanic_decision_tree_data.csv')
+
+shuffle_index <- sample(1:nrow(titanic_set))
+
+# shuffle the data so class order isn't in order - need this for training/testing split later on 
+titanic_set <- titanic_set[shuffle_index, ]
+
+```
+
+```{r}
+titanic_trim <- titanic_set %>% 
+  drop_na(survived) %>% 
+  mutate(sex = as.factor(sex),
+         survived = as.factor(survived),
+         pclass = as.factor(pclass),
+         embarked = as.factor(embarked),
+         age = case_when(
+           age <= 16 ~ "child",
+           TRUE ~ "adult"
+         ),
+       pclass, sex, age,   age = as.factor(age)) %>% 
+  select(pclass, sex, age, sib_sp, parch, embarked, survived) %>% 
+  na.omit()
+
+head(titanic_trim)
+  
+```
+
+```{r}
+ggpairs(titanic_trim,
+        progress = FALSE)
+```
+
+sex, age, parch,
+
+```{r}
+n_data <- nrow(titanic_trim)
+
+# create a test sample index
+titanic_index <- sample(1:n_data, size = n_data*0.2)
+
+# create a test set
+titanic_test <- slice(titanic_trim, titanic_index)
+
+
+# create a training set
+titanic_train <- slice(titanic_trim, -titanic_index)
+```
+
+```{r}
+titanic_test %>% 
+janitor::tabyl(survived)
+
+
+titanic_train %>% 
+  janitor::tabyl(survived)
+
+```
+
+Similar proportions of survived un both
+
+
+```{r}
+titanic_fit <- rpart(
+  formula = survived ~ .,
+  data = titanic_train,
+  method = "class"
+)
+
+rpart.plot(titanic_fit,
+           yesno = 2,
+           fallen.leaves = TRUE,
+           faclen = 10,
+           digits = 2,
+           split.border.col = 1)
+```
+
+```{r}
+rpart.rules(titanic_fit, cover = TRUE)
+```
+
+
+Females who were in middle or 1st class had the best chance of surviving.
+Child males with 3 or more siblings onboard had the least chance of surviving.
+Child with one or more parents but less than 3 siblings onboard had a very good
+chance of survival
+
+
+```{r}
+titanic_test_pred <- titanic_test %>% 
+  add_predictions(model = titanic_fit, type = "class")
+```
+
+
+```{r}
+conf_mat_titanic <- titanic_test_pred %>% 
+  conf_mat(truth = survived, estimate = pred)
+
+conf_mat_titanic
+```
+
+The model correctly predicted deaths 96/109 times (88% of the time)
+
+The model correctly predicted survival 42/68 times (62% of the time)
+
+
+
+```{r}
+control <- trainControl(
+  method = "repeatedcv", 
+  number = 5, 
+  repeats = 10
+)
+
+tune_grid = expand.grid(
+  mtry = 1:6,
+  splitrule = c("gini", "extratrees"),
+  min.node.size = c(1, 3, 5)
+)
+rf_tune <- train(
+  survived ~ ., 
+  data = titanic_train, 
+  method = "ranger",
+  metric = "Kappa",
+  num.trees = 1000,
+  importance = "impurity",
+  tuneGrid = tune_grid, 
+  trControl = control
+)
+
+plot(rf_tune)
+rf_tune
+```
+
+
+
+
+
+
+
+
+
+
+
+ 
