@@ -1,0 +1,125 @@
+---
+title: "W11 D3 Homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(cluster)
+library(factoextra)
+library(dendextend)
+library(corrplot)
+library(broom)
+library(janitor)
+library(GGally)
+```
+
+```{r}
+mall_customers <- clean_names(read_csv("data/mall_customers.csv")) %>% 
+  column_to_rownames("customer_id")
+
+head(mall_customers)
+
+ggpairs(mall_customers,
+        progress = FALSE)
+```
+
+```{r}
+mall_customers %>% 
+ggplot(aes(x = annual_income_k, y = spending_score_1_100, colour = gender)) +
+  geom_point()
+```
+
+
+
+```{r}
+mall_customers %>% 
+ggplot(aes(x = age, y = spending_score_1_100, colour = gender)) +
+  geom_point()
+```
+
+```{r}
+customers_scale <- mall_customers %>% 
+  select(-gender, -age) %>% 
+  mutate(across(where(is.numeric), scale))
+
+```
+
+
+```{r}
+fviz_nbclust(customers_scale,
+             kmeans,
+             method = "wss")
+```
+
+```{r}
+fviz_nbclust(customers_scale,
+             kmeans,
+             method = "silhouette")
+```
+
+```{r}
+fviz_nbclust(customers_scale,
+             kmeans,
+             method = "gap_stat")
+```
+
+Going to use 6 as k-value
+
+
+```{r}
+max_k <- 20
+
+customers_clusters <- tibble(k = 1:max_k) %>%
+  mutate(
+    kclust = map(k, ~ kmeans(customers_scale, 
+                             .x,
+                             centers = 6,
+                             nstart = 20)
+                 ), 
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, mall_customers %>% 
+                      select(-gender, -age))
+  )
+  
+```
+```{r}
+clusterings_customers <- customers_clusters %>% 
+  unnest(glanced)
+```
+
+
+```{r}
+clusterings_customers %>% 
+  unnest(cols = c(augmented)) %>%
+  filter(k <= 6) %>%
+  ggplot(aes(x = annual_income_k, y = spending_score_1_100)) +
+  geom_point(aes(color = .cluster))
+```
+
+Clustering seems good on the whole visually.
+
+Perhaps clusters 3 & 6 couldve been one cluster.
+
+Clusters 1 and 6 quite spread out
+
+
+## Labels
+
+Cluster 1: High income - high spenders
+
+Cluster 2: High income - low spenders
+
+Cluster 3: Medium-high income - high spenders
+
+Cluster 4: Low income - low spenders
+
+Cluster 5: Low income - high spenders
+
+Cluster 6: Medium income - medium spenders
+
+
+
+
+
