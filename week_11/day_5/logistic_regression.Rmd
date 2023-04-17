@@ -1,0 +1,183 @@
+---
+title: "Logistic regression"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(modelr)
+library(janitor)
+library(GGally)
+library(pROC)
+library(caret)
+```
+
+```{r}
+oj <- clean_names(read_csv("data/orange_juice.csv"))
+
+head(oj)
+```
+
+```{r}
+oj_tidy <- oj %>% 
+  mutate(ch_flag = case_when(
+    purchase == "CH" ~ "Yes",
+    purchase == "MM" ~ "No"
+  ), .before = purchase) %>% 
+  select(ch_flag, weekof_purchase:store) %>% 
+  mutate(ch_flag = as.factor(ch_flag),
+         special_ch = as.factor(special_ch),
+         special_mm = as.factor(special_mm))
+
+  
+head(oj_tidy)
+```
+
+```{r}
+alias(ch_flag ~ .,
+      data = oj_tidy)
+```
+
+```{r}
+oj_tidy <- oj_tidy %>% 
+  select(-store, -store7, -price_ch, -price_mm, -sale_price_mm, -sale_price_ch,
+         -disc_ch, -disc_mm)
+
+oj_tidy %>% 
+  summarise(across(everything(), ~ sum(is.na(.x))))
+```
+
+
+```{r}
+ggpairs(oj_tidy,
+        progress = FALSE)
+```
+
+
+
+special_mm, special_ch, loyal_ch, pct_disc_mm, pct_disc_ch
+
+```{r}
+ggpairs(oj_tidy %>% 
+          select(ch_flag, special_ch, special_mm, loyal_ch, pct_disc_mm, pct_disc_ch))
+```
+
+```{r}
+model_sch <- glm(formula = ch_flag ~ special_ch,
+                 data = oj_tidy,
+                 family = binomial(link = "logit"))
+
+model_smm <- glm(formula = ch_flag ~ special_mm,
+                 data = oj_tidy,
+                 family = binomial(link = "logit"))
+
+model_lch <- glm(formula = ch_flag ~ loyal_ch,
+                 data = oj_tidy,
+                 family = binomial(link = "logit"))
+
+model_pdm <- glm(formula = ch_flag ~ pct_disc_mm,
+                 data = oj_tidy,
+                 family = binomial(link = "logit"))
+
+model_pdc <- glm(formula = ch_flag ~ pct_disc_ch,
+                 data = oj_tidy,
+                 family = binomial(link = "logit"))
+```
+
+
+
+```{r}
+summary(model_pdc)
+
+summary(model_pdm)
+
+summary(model_lch)
+
+summary(model_smm)
+
+summary(model_sch)
+```
+
+```{r}
+oj_lch_data <- oj_tidy %>% 
+  add_predictions(model = model_lch)
+
+roc_lch <- oj_lch_data %>%
+  roc(response = ch_flag, predictor = pred)
+
+roc_curve_lch <- ggroc(data = roc_lch, legacy.axes = TRUE) +
+  coord_fixed() + 
+  ylab("sensitivity (TPR)") + 
+  xlab("1-specificity (TNR)")
+
+roc_curve_lch
+
+auc(roc_lch)
+```
+
+```{r}
+oj_smm_data <- oj_tidy %>% 
+  add_predictions(model = model_smm)
+
+roc_smm <- oj_smm_data %>%
+  roc(response = ch_flag, predictor = pred)
+
+roc_curve_smm <- ggroc(data = roc_smm, legacy.axes = TRUE) +
+  coord_fixed() + 
+  ylab("sensitivity (TPR)") + 
+  xlab("1-specificity (TNR)")
+
+roc_curve_smm
+
+auc(roc_smm)
+```
+
+```{r}
+oj_pdc_data <- oj_tidy %>% 
+  add_predictions(model = model_pdc)
+
+roc_pdc <- oj_pdc_data %>%
+  roc(response = ch_flag, predictor = pred)
+
+roc_curve_pdc <- ggroc(data = roc_pdc, legacy.axes = TRUE) +
+  coord_fixed() + 
+  ylab("sensitivity (TPR)") + 
+  xlab("1-specificity (TNR)")
+
+roc_curve_pdc
+
+auc(roc_pdc)
+```
+
+
+loyal_ch is best indicator 
+
+```{r}
+train_control <- trainControl(method = "repeatedcv", 
+                              number = 5,
+                              repeats = 100,
+                              savePredictions = TRUE, 
+                              classProbs = TRUE, 
+                              summaryFunction = twoClassSummary)
+```
+
+```{r}
+
+model_lch_train <- train(ch_flag ~ loyal_ch,
+               data = oj_tidy,
+               trControl = train_control,
+               method = "glm",
+               family = binomial(link = 'logit'))
+```
+
+
+```{r}
+model_train_all <- train(ch_flag ~ .,
+               data = oj_tidy,
+               trControl = train_control,
+               method = "glm",
+               family = binomial(link = 'logit'))
+
+summary(model_train_all)
+```
+

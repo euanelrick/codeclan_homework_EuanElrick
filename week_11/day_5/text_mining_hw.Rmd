@@ -1,0 +1,81 @@
+---
+title: "Text Mining HW"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(janeaustenr)
+```
+
+
+```{r}
+ja_titles <- c("Pride and Prejudice", "Sense and Sensibility", "Emma", "Persuasion", "Mansfield Park", "Northanger Abbey")
+
+ja_books <- list(prideprejudice, sensesensibility, emma, persuasion, mansfieldpark,  northangerabbey)
+
+ja_books <- purrr::map_chr(ja_books, paste, collapse = " ")
+
+ja_df <- tibble(
+  title = ja_titles,
+  text = ja_books,
+) %>% 
+  unnest_tokens(word, text)
+```
+
+```{r}
+ja_df %>% 
+  distinct(title)
+
+ja_df %>% 
+  filter(title %in% c("Pride and Prejudice", "Sense and Sensibility")) %>% 
+  group_by(word) %>% 
+  summarise(count = n()) %>% 
+  slice_max(count, n = 5)
+```
+
+```{r}
+ja_df %>% 
+  filter(title %in% c("Pride and Prejudice", "Sense and Sensibility")) %>% 
+  anti_join(stop_words) %>% 
+  group_by(word) %>% 
+  summarise(count = n()) %>% 
+  slice_max(count, n = 5)
+```
+
+```{r}
+
+ja_df %>% 
+  filter(title %in% c("Pride and Prejudice", "Sense and Sensibility")) %>% 
+  inner_join(get_sentiments("bing")) %>% 
+  group_by(word) %>% 
+  summarise(count = n()) %>% 
+  slice_max(count, n = 5)
+```
+
+
+```{r}
+
+ja_df %>% 
+  filter(title %in% c("Pride and Prejudice", "Sense and Sensibility")) %>% 
+  anti_join(stop_words) %>% 
+  inner_join(get_sentiments("bing")) %>% 
+  group_by(title, sentiment) %>% 
+  summarise(count = n()) %>% 
+  ggplot() +
+  aes(x = sentiment, y = count, fill = title)+
+  geom_col(position = "dodge")
+  
+
+
+
+```
+
+
+
+
+
+
+
+

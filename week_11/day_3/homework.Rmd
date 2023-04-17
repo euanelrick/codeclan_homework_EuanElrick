@@ -49,33 +49,35 @@ customers_scale <- mall_customers %>%
 ```{r}
 fviz_nbclust(customers_scale,
              kmeans,
-             method = "wss")
+             method = "wss",
+             nstart = 25)
 ```
 
 ```{r}
 fviz_nbclust(customers_scale,
              kmeans,
-             method = "silhouette")
+             method = "silhouette",
+             nstart = 50)
 ```
 
 ```{r}
 fviz_nbclust(customers_scale,
              kmeans,
-             method = "gap_stat")
+             method = "gap_stat",
+             nstart = 25)
 ```
 
 Going to use 6 as k-value
 
 
 ```{r}
-max_k <- 20
+max_k <- 25
 
 customers_clusters <- tibble(k = 1:max_k) %>%
   mutate(
     kclust = map(k, ~ kmeans(customers_scale, 
                              .x,
-                             centers = 6,
-                             nstart = 20)
+                             centers = 6)
                  ), 
     tidied = map(kclust, tidy),
     glanced = map(kclust, glance),
