@@ -181,3 +181,5 @@ model_train_all <- train(ch_flag ~ .,
 summary(model_train_all)
 ```
 
+
+
